@@ -1,0 +1,200 @@
+.dashboard-page {
+  min-height: 100vh;
+  background-color: #f5f7fb;
+  padding: 30px 20px;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.dashboard-header p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.dashboard-section {
+  background-color: #ffffff;
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+/* Leave Balance */
+
+.leave-balance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.leave-balance-card {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.leave-balance-card h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.leave-balance-card p {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Leave Tables */
+
+.leave-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.leave-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+}
+
+.leave-table th,
+.leave-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.leave-table th {
+  font-weight: 600;
+}
+
+/* Apply Leave */
+
+.apply-leave-section {
+  margin-bottom: 0;
+}
+
+.apply-leave-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 20px 15px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 26px;
+  }
+
+  .leave-balance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-section {
+    padding: 18px;
+  }
+}
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+.dashboard-loading,
+.dashboard-error {
+  background-color: #ffffff;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 30px;
+}
+.dashboard-error {
+  color: #b91c1c;
+}
+.leave-form {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.leave-form .form-group {
+  margin-bottom: 20px;
+}
+
+.leave-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.leave-form input,
+.leave-form select,
+.leave-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.leave-form textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.apply-leave-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.form-error {
+  margin-top: 6px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #d32f2f;
+}
+.success-message {
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2e7d32;
+}
+.apply-leave-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
