@@ -113,14 +113,10 @@ function Login() {
       console.log("Login successful:", response);
 
       // Get JWT from the login response
-      const token =
-        response?.token ||
-        response?.accessToken ||
-        response?.jwt ||
-        response?.data?.token;
+      const token = response?.access_token;
 
-        if (!token) {
-          throw new Error("JWT token was not returned by the server.");
+      if (!token) {
+        throw new Error("JWT token was not returned by the server.");
       }
 
       // Store JWT for authenticated API requests
