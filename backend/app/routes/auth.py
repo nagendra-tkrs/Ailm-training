@@ -5,7 +5,6 @@ from app.database.database import get_db
 from app.schemas.auth import RegisterRequest, LoginRequest
 from app.services.auth_service import register_user, login_user
 from app.core.security import create_access_token
-from fastapi import Depends
 
 from app.core.dependencies import require_role
 
@@ -39,12 +38,15 @@ def register(
         "message": "User registered successfully",
         "user": {
             "id": user.id,
+            "employee_id": user.employee_id,
             "name": user.name,
             "email": user.email,
             "role": user.role,
             "created_date": user.created_date
         }
     }
+
+
 @router.post("/login")
 def login(
     request: LoginRequest,
@@ -72,6 +74,7 @@ def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
 
 @router.get("/admin-test")
 def admin_test(

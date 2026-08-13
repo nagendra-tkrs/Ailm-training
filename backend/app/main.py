@@ -1,12 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.database.database import engine
-from app.models.user import User
+from app.database.database import engine, Base
+from app.database import seed
+from app.models import User, Leave, LeaveBalance, EmployeeProfile
 from app.routes.auth import router as auth_router
+from app.routes.leaves import router as leaves_router
+from app.routes.leaves_crud import router as leaves_crud_router
+from app.routes.dashboard import router as dashboard_router
+from app.routes.users import router as users_router
+from app.routes.admin import router as admin_router
+from app.routes.profile import router as profile_router
 from app.core.dependencies import get_current_user
-from fastapi import Depends
+
 
 app = FastAPI(
     title="Employee Leave Management System",
@@ -21,7 +28,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
+    seed.seed_database()
+
+
 app.include_router(auth_router)
+app.include_router(leaves_router)
+app.include_router(leaves_crud_router)
+app.include_router(dashboard_router)
+app.include_router(users_router)
+app.include_router(admin_router)
+app.include_router(profile_router)
 
 
 @app.get("/")
@@ -48,38 +68,12 @@ def database_test():
         }
 
 
-@app.get("/users")
-def get_users():
-    try:
-        with engine.connect() as connection:
-            result = connection.execute(
-                text(
-                    "SELECT id, name, email, role, created_date "
-                    "FROM users"
-                )
-            )
-
-            users = [
-                dict(row._mapping)
-                for row in result
-            ]
-
-        return {
-            "users": users
-        }
-
-    except Exception as error:
-        return {
-            "message": "Failed to retrieve users",
-            "error": str(error)
-        }
-
-
 @app.get("/health")
 def health_check():
     return {
         "status": "ok"
     }
+
 
 @app.get("/api/auth/me")
 def get_current_user_info(
