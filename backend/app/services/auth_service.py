@@ -1,7 +1,11 @@
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password, verify_password
 from app.models.user import User
+from app.models.leave_balance import create_default_balances
+from app.models.employee_profile import EmployeeProfile
+from app.services.user_service import generate_employee_id
 
 
 def register_user(
@@ -24,17 +28,47 @@ def register_user(
     # Hash password
     hashed_password = hash_password(password)
 
-    # Create user
-    user = User(
-        name=name,
-        email=email,
-        password=hashed_password,
-        role=role
-    )
+    # Create user; retry with a fresh random employee id if two concurrent
+    # registrations happened to pick the same number.
+    user = None
 
-    db.add(user)
-    db.commit()
+    for _ in range(10):
+        user = User(
+            name=name,
+            email=email,
+            password=hashed_password,
+            role=role,
+            employee_id=generate_employee_id(db),
+        )
+
+        db.add(user)
+
+        try:
+            db.commit()
+            break
+        except IntegrityError:
+            db.rollback()
+            user = None
+
+    if user is None:
+        return None
+
     db.refresh(user)
+
+    # Give the user a leave balance for every leave type
+    if role == "employee":
+        create_default_balances(db, user.id)
+
+    # Create an empty profile so the employee can fill in contact details
+    db.add(
+        EmployeeProfile(
+            user_id=user.id,
+            name=name,
+            email=email,
+            role=role,
+        )
+    )
+    db.commit()
 
     return user
 

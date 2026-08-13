@@ -1,4 +1,5 @@
 from sqlalchemy import Column, DateTime, Enum, Integer, String, text
+from sqlalchemy.orm import relationship
 
 from app.database.database import Base
 
@@ -10,6 +11,13 @@ class User(Base):
         Integer,
         primary_key=True,
         autoincrement=True
+    )
+
+    employee_id = Column(
+        Integer,
+        unique=True,
+        nullable=True,
+        index=True
     )
 
     name = Column(
@@ -38,4 +46,9 @@ class User(Base):
         DateTime,
         nullable=True,
         server_default=text("CURRENT_TIMESTAMP")
+    )
+
+    leaves = relationship(
+        "Leave",
+        back_populates="user"
     )
