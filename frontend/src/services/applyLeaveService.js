@@ -33,19 +33,14 @@ export const applyLeave = async (
     }
 
     // Authentication error
-    if (
-      response.status === 401 ||
-      response.status === 403
-    ) {
+    if (response.status === 401 || response.status === 403) {
       throw new Error("AUTHENTICATION_ERROR");
     }
 
-    // Other API errors
+    // Other API errors - FastAPI often returns { detail: "message" }
     if (!response.ok) {
-      throw new Error(
-        data.message ||
-          "Failed to submit leave request"
-      );
+      const message = data.message || data.detail || "Failed to submit leave request";
+      throw new Error(message);
     }
 
     return data;

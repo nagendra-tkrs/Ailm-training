@@ -1,6 +1,10 @@
+import "../styles/layout.css";
+
 function Footer() {
   return (
-    <h2>Footer Component</h2>
+    <footer className="site-footer">
+      <div>© {new Date().getFullYear()} Employee Leave Management</div>
+    </footer>
   );
 }
 

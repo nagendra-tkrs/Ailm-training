@@ -1,41 +1,56 @@
+:root{
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #0f172a; /* deep navy */
+  --primary: #0ea5a4; /* teal */
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+
 .dashboard-page {
   min-height: 100vh;
-  background-color: #f5f7fb;
-  padding: 30px 20px;
+  background: linear-gradient(180deg,var(--bg),#eef3f6 60%);
+  padding: 40px 20px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: var(--accent);
 }
 
 .dashboard-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
 .dashboard-header {
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 
 .dashboard-header h1 {
-  margin: 0 0 8px;
-  font-size: 32px;
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 .dashboard-header p {
   margin: 0;
-  color: #666;
-  font-size: 16px;
+  color: var(--muted);
+  font-size: 15px;
 }
 
 .dashboard-section {
-  background-color: #ffffff;
-  padding: 24px;
-  margin-bottom: 24px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--card);
+  padding: 22px;
+  margin-bottom: 22px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
 }
 
 .dashboard-section h2 {
   margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 22px;
+  margin-bottom: 18px;
+  font-size: 20px;
+  color: var(--accent);
 }
 
 /* Leave Balance */
@@ -43,25 +58,30 @@
 .leave-balance-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 18px;
 }
 
 .leave-balance-card {
-  padding: 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  padding: 20px 18px;
+  border-radius: 10px;
   text-align: center;
+  background: linear-gradient(180deg, rgba(14,165,164,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(15,23,42,0.04);
 }
 
 .leave-balance-card h3 {
-  margin: 0 0 10px;
-  font-size: 17px;
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .leave-balance-card p {
   margin: 0;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 /* Leave Tables */
@@ -74,18 +94,28 @@
 .leave-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 750px;
+  min-width: 720px;
+  background: transparent;
 }
 
 .leave-table th,
 .leave-table td {
-  padding: 12px;
+  padding: 12px 14px;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+  color: var(--text-h);
 }
+
+.leave-table td { color: var(--text-h) !important; }
 
 .leave-table th {
   font-weight: 600;
+  background: rgba(15,23,42,0.02);
+  color: var(--text-h);
+}
+
+.leave-table tr:hover td {
+  background: rgba(14,165,164,0.02);
 }
 
 /* Apply Leave */
@@ -95,11 +125,14 @@
 }
 
 .apply-leave-button {
-  padding: 12px 24px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 6px 14px rgba(15,23,42,0.08);
 }
 
 /* Responsive */
@@ -128,17 +161,17 @@
 }
 .dashboard-loading,
 .dashboard-error {
-  background-color: #ffffff;
-  padding: 30px;
+  background: var(--card);
+  padding: 28px;
   text-align: center;
   border-radius: 10px;
   margin-top: 30px;
 }
 .dashboard-error {
-  color: #b91c1c;
+  color: var(--danger);
 }
 .leave-form {
-  max-width: 700px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -152,15 +185,36 @@
   font-weight: 600;
 }
 
+.leave-form label { color: var(--text-h); }
+
 .leave-form input,
 .leave-form select,
 .leave-form textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 8px;
   font-size: 15px;
   box-sizing: border-box;
+  background: #fff;
+  color: var(--text-h);
+}
+
+/* Force text fill color for webkit-based browsers (date inputs, placeholders) */
+.leave-form input,
+.leave-form textarea,
+.leave-form select {
+  -webkit-text-fill-color: var(--text-h) !important;
+}
+
+/* Muted but visible placeholder for select's disabled option */
+.leave-form select option[disabled] {
+  color: rgba(55,65,81,0.45);
+}
+
+/* Date input inner text for webkit */
+input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-input-placeholder {
+  color: var(--text-h) !important;
 }
 
 .leave-form textarea {
@@ -177,24 +231,30 @@
   width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
 }
 .form-error {
   margin-top: 6px;
   margin-bottom: 0;
   font-size: 14px;
-  color: #d32f2f;
+  color: var(--danger);
 }
 .success-message {
   margin-bottom: 20px;
   font-size: 15px;
-  font-weight: 500;
-  color: #2e7d32;
+  font-weight: 600;
+  color: var(--success);
 }
 .apply-leave-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* small screens tweaks */
+@media (max-width: 520px) {
+  .leave-balance-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
 }

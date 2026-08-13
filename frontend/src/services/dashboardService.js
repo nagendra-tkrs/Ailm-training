@@ -9,12 +9,18 @@ export const getDashboardData = async (token) => {
     },
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
     throw new Error("AUTHENTICATION_ERROR");
   }
 
   if (!response.ok) {
-    throw new Error("DASHBOARD_REQUEST_FAILED");
+    // Try to parse error detail
+    try {
+      const err = await response.json();
+      throw new Error(err.message || err.detail || "DASHBOARD_REQUEST_FAILED");
+    } catch {
+      throw new Error("DASHBOARD_REQUEST_FAILED");
+    }
   }
 
   return response.json();
