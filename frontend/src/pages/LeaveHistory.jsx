@@ -38,7 +38,7 @@ function LeaveHistory() {
       // API returns snake_case spec; normalize to camelCase for UI convenience
       const normalized = data.map((l) => ({
         id: l.id,
-        leaveType: l.leave_type,
+        leaveType: TOKEN_TO_DISPLAY[l.leave_type] || l.leave_type,
         startDate: l.start_date,
         endDate: l.end_date,
         leaveDays: l.leave_days,
@@ -76,10 +76,22 @@ function LeaveHistory() {
 
   const pageItems = filteredLeaves.slice((page - 1) * pageSize, page * pageSize);
 
+  const DISPLAY_TO_TOKEN = {
+    "Casual Leave": "CASUAL",
+    "Sick Leave": "SICK",
+    "Earned Leave": "EARNED",
+  };
+
+  const TOKEN_TO_DISPLAY = {
+    CASUAL: "Casual Leave",
+    SICK: "Sick Leave",
+    EARNED: "Earned Leave",
+  };
+
   const startEdit = (leave) => {
     setEditing(leave);
     setEditPayload({
-      leave_type: leave.leaveType,
+      leave_type: DISPLAY_TO_TOKEN[leave.leaveType] || leave.leaveType,
       start_date: leave.startDate,
       end_date: leave.endDate,
       reason: leave.reason,
@@ -208,9 +220,9 @@ function LeaveHistory() {
               <h3>Edit Leave</h3>
               <label>Leave Type</label>
               <select value={editPayload.leave_type} onChange={(e)=>setEditPayload({...editPayload, leave_type: e.target.value})}>
-                <option value="Casual Leave">Casual Leave</option>
-                <option value="Sick Leave">Sick Leave</option>
-                <option value="Earned Leave">Earned Leave</option>
+                <option value="CASUAL">Casual Leave</option>
+                <option value="SICK">Sick Leave</option>
+                <option value="EARNED">Earned Leave</option>
               </select>
 
               <label>Start Date</label>
