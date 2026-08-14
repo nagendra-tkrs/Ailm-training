@@ -1,0 +1,33 @@
+.leave-history-page .container {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 20px;
+}
+.leave-history-page h1 {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+.filter-item { display:flex; flex-direction:column; }
+.filter-item label { font-size: 13px; margin-bottom:6px; }
+.filter-item input, .filter-item select { padding:8px 10px; border-radius:6px; border:1px solid rgba(15,23,42,0.08); }
+.filter-item.actions button { padding:8px 12px; }
+.loading, .error, .empty { padding:18px; background:#fff; border-radius:8px; }
+.leave-history-table { width:100%; border-collapse:collapse; background:transparent; }
+.leave-history-table th, .leave-history-table td { padding:10px 12px; border-bottom:1px solid rgba(15,23,42,0.06); text-align:left; }
+.leave-history-table td.status.pending { color:#d97706; font-weight:700; }
+.leave-history-table td.status.approved { color:#16a34a; font-weight:700; }
+.leave-history-table td.status.rejected { color:#dc2626; font-weight:700; }
+.btn-link { background:none; border:none; color:var(--accent); cursor:pointer; margin-right:8px; }
+.btn-link.danger { color:var(--danger); }
+.pagination { display:flex; gap:12px; align-items:center; margin-top:14px; }
+.edit-modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.45); }
+.edit-form { background:var(--card); padding:18px; border-radius:8px; width:420px; box-shadow:var(--shadow); }
+.edit-form label { display:block; margin-top:10px; margin-bottom:6px; }
+.edit-form input, .edit-form select, .edit-form textarea { width:100%; padding:8px; border-radius:6px; border:1px solid rgba(15,23,42,0.06); }
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
