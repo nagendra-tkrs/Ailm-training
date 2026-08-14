@@ -345,6 +345,18 @@ function Dashboard() {
           )}
         </section>
 
+        {/* Quick link to Leave History */}
+        <div
+          className="leave-history-quickcard"
+          onClick={() => navigate('/leave-history')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter') navigate('/leave-history'); }}
+        >
+          <h3>Leave History</h3>
+          <p>View and manage your leave requests</p>
+        </div>
+
         {/* Pending Leaves */}
         <section className="dashboard-section">
           <h2>Pending Leaves</h2>
