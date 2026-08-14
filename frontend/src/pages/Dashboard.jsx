@@ -63,11 +63,11 @@ function Dashboard() {
       setLoading(false);
     }
   };
-
+  const token = localStorage.getItem('token')
   // Load dashboard when page opens
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [token]);
 
   // Automatically calculate leave days
   useEffect(() => {
