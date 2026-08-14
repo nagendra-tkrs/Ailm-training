@@ -1,33 +1,46 @@
 .leave-history-page .container {
   max-width: 1100px;
-  margin: 32px auto;
-  padding: 20px;
+  margin: 40px auto;
+  padding: 28px 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.06);
 }
 .leave-history-page h1 {
-  font-size: 26px;
-  margin-bottom: 12px;
+  font-size: 32px;
+  margin: 6px 0 18px;
+  text-align: center;
+  color: var(--text-h);
+  font-weight: 600;
 }
 .filters {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: flex-end;
-  margin-bottom: 18px;
+  justify-content: center;
+  margin-bottom: 22px;
 }
 .filter-item { display:flex; flex-direction:column; }
-.filter-item label { font-size: 13px; margin-bottom:6px; }
-.filter-item input, .filter-item select { padding:8px 10px; border-radius:6px; border:1px solid rgba(15,23,42,0.08); }
-.filter-item.actions button { padding:8px 12px; }
-.loading, .error, .empty { padding:18px; background:#fff; border-radius:8px; }
-.leave-history-table { width:100%; border-collapse:collapse; background:transparent; }
-.leave-history-table th, .leave-history-table td { padding:10px 12px; border-bottom:1px solid rgba(15,23,42,0.06); text-align:left; }
-.leave-history-table td.status.pending { color:#d97706; font-weight:700; }
-.leave-history-table td.status.approved { color:#16a34a; font-weight:700; }
-.leave-history-table td.status.rejected { color:#dc2626; font-weight:700; }
-.btn-link { background:none; border:none; color:var(--accent); cursor:pointer; margin-right:8px; }
+.filter-item label { font-size: 13px; margin-bottom:6px; color:var(--muted); }
+.filter-item input, .filter-item select { padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text-h); min-width:150px; }
+.filter-item.actions button { padding:10px 14px; border-radius:8px; background:var(--accent); color:white; border:none; cursor:pointer; }
+.loading, .error, .empty { padding:18px; background:var(--card); border-radius:8px; color:var(--muted); }
+.leave-history-table { width:100%; border-collapse:collapse; background:transparent; font-size:15px; }
+.leave-history-table th { padding:14px 12px; text-align:left; color:var(--muted); font-weight:700; border-bottom:1px solid var(--border); }
+.leave-history-table td { padding:14px 12px; border-bottom:1px solid var(--border); color:var(--text-h); vertical-align:middle; }
+.leave-history-table tbody tr:nth-child(even) { background: rgba(14,165,164,0.02); }
+.leave-history-table td.status.pending { color:#d97706; font-weight:700; text-transform:capitalize; }
+.leave-history-table td.status.approved { color:#16a34a; font-weight:700; text-transform:capitalize; }
+.leave-history-table td.status.rejected { color:#dc2626; font-weight:700; text-transform:capitalize; }
+.btn-link { background:none; border:none; color:var(--accent); cursor:pointer; margin-right:8px; font-weight:600; }
 .btn-link.danger { color:var(--danger); }
-.pagination { display:flex; gap:12px; align-items:center; margin-top:14px; }
-.edit-modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.45); }
-.edit-form { background:var(--card); padding:18px; border-radius:8px; width:420px; box-shadow:var(--shadow); }
-.edit-form label { display:block; margin-top:10px; margin-bottom:6px; }
-.edit-form input, .edit-form select, .edit-form textarea { width:100%; padding:8px; border-radius:6px; border:1px solid rgba(15,23,42,0.06); }
-.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.pagination { display:flex; gap:12px; align-items:center; margin-top:18px; justify-content:center; }
+.pagination button { padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--card); cursor:pointer; }
+.pagination span { color:var(--muted); }
+.edit-modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.45); z-index:40; }
+.edit-form { background:var(--card); padding:22px; border-radius:10px; width:520px; box-shadow:var(--shadow); }
+.edit-form h3 { margin:0 0 12px; font-size:18px; color:var(--text-h); }
+.edit-form label { display:block; margin-top:10px; margin-bottom:6px; color:var(--muted); }
+.edit-form input, .edit-form select, .edit-form textarea { width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text-h); }
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+.modal-actions button { padding:10px 12px; border-radius:8px; }
