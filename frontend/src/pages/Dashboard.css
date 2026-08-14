@@ -281,6 +281,20 @@ input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-input-pla
   color: var(--muted);
 }
 
+.leave-history-quickcard .quickcard-top { display:flex; align-items:center; justify-content:center; gap:12px; }
+.leave-history-quickcard .badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:30px;
+  height:30px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:700;
+}
+
 /* small screens tweaks */
 @media (max-width: 520px) {
   .leave-balance-grid { grid-template-columns: 1fr; }

@@ -353,7 +353,10 @@ function Dashboard() {
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === 'Enter') navigate('/leave-history'); }}
         >
-          <h3>Leave History</h3>
+          <div className="quickcard-top">
+            <h3>Leave History</h3>
+            <span className="badge">{pendingLeaves.length || 0}</span>
+          </div>
           <p>View and manage your leave requests</p>
         </div>
 
