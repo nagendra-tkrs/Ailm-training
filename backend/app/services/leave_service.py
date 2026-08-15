@@ -608,7 +608,7 @@ def get_admin_leave_list(
         user = users.get(leave.user_id)
 
         item["employee"] = {
-            "id": leave.user_id,
+            "employee_id": user.employee_id if user else None,
             "name": user.name if user else None,
             "email": user.email if user else None,
         }
