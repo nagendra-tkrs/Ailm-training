@@ -522,3 +522,122 @@ def delete_employee_leave(
     db.commit()
 
     return None
+
+
+# --------------------------------------------------------------------------
+# Admin leave management: /api/admin/leaves
+# --------------------------------------------------------------------------
+
+
+def get_admin_leave_list(
+    db: Session,
+    status_filter: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    page: int = 1,
+    limit: int = 10,
+):
+    if status_filter and status_filter not in ("pending", "approved", "rejected"):
+        return None, _leave_error(
+            "Invalid status filter. Use pending, approved or rejected",
+            400,
+        )
+
+    query = db.query(Leave)
+
+    if status_filter:
+        query = query.filter(Leave.status == status_filter)
+
+    if start_date is not None:
+        query = query.filter(Leave.start_date >= start_date)
+
+    if end_date is not None:
+        query = query.filter(Leave.end_date <= end_date)
+
+    total_records = query.count()
+
+    leaves = (
+        query.order_by(Leave.id.desc())
+        .offset((page - 1) * limit)
+        .limit(limit)
+        .all()
+    )
+
+    users = {
+        user.id: user
+        for user in db.query(User).all()
+    }
+
+    items = []
+    for leave in leaves:
+        item = serialize_leave(leave)
+        user = users.get(leave.user_id)
+
+        item["employee"] = {
+            "id": leave.user_id,
+            "name": user.name if user else None,
+            "email": user.email if user else None,
+        }
+
+        items.append(item)
+
+    pagination = {
+        "current_page": page,
+        "page_size": limit,
+        "total_records": total_records,
+        "total_pages": (total_records + limit - 1) // limit if limit else 0,
+    }
+
+    return {"leaves": items, "pagination": pagination}, None
+
+
+def approve_leave(
+    db: Session,
+    leave_id: int
+):
+    leave = db.query(Leave).filter(Leave.id == leave_id).first()
+
+    if leave is None:
+        return None, _leave_error("Leave request not found", 404)
+
+    if leave.status != "pending":
+        return None, _leave_error(
+            f"Only pending leave requests can be approved "
+            f"(current status: {leave.status})",
+            400,
+        )
+
+    balance = get_balance_row(db, leave.user_id, leave.leave_type)
+
+    if balance is not None:
+        balance.used_days += leave.days
+        db.add(balance)
+
+    leave.status = "approved"
+    db.commit()
+    db.refresh(leave)
+
+    return leave, None
+
+
+def reject_leave(
+    db: Session,
+    leave_id: int
+):
+    leave = db.query(Leave).filter(Leave.id == leave_id).first()
+
+    if leave is None:
+        return None, _leave_error("Leave request not found", 404)
+
+    if leave.status != "pending":
+        return None, _leave_error(
+            f"Only pending leave requests can be rejected "
+            f"(current status: {leave.status})",
+            400,
+        )
+
+    leave.status = "rejected"
+    db.commit()
+    db.refresh(leave)
+
+    return leave, None
