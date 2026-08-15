@@ -20,6 +20,12 @@ class Leave(Base):
         index=True
     )
 
+    employee_id = Column(
+        Integer,
+        nullable=True,
+        index=True
+    )
+
     leave_type = Column(
         String(50),
         nullable=False

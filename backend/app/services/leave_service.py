@@ -138,6 +138,9 @@ def apply_leave(
         days=days,
         reason=reason,
         status="pending",
+        employee_id=db.query(User.employee_id)
+        .filter(User.id == user_id)
+        .scalar(),
     )
 
     db.add(leave)
@@ -285,9 +288,9 @@ def delete_leave(db: Session, leave_id: int, user_id: int):
 
 
 def serialize_leave_spec(leave: Leave) -> dict:
-    employee_id = leave.user_id
+    employee_id = leave.employee_id
 
-    if leave.user is not None and leave.user.employee_id:
+    if employee_id is None and leave.user is not None:
         employee_id = leave.user.employee_id
 
     return {
@@ -378,6 +381,9 @@ def create_leave(
         days=leave_days,
         reason=reason,
         status="pending",
+        employee_id=db.query(User.employee_id)
+        .filter(User.id == user_id)
+        .scalar(),
     )
 
     db.add(leave)

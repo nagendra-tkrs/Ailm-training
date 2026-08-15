@@ -1,8 +1,12 @@
+import re
+
 from sqlalchemy.orm import Session
 
 from app.models.user import User
 from app.models.employee_profile import EmployeeProfile
 from app.core.security import hash_password, verify_password
+
+PHONE_NUMBER_PATTERN = re.compile(r"^\+[1-9]\d{1,3}\d{10}$")
 
 
 def _error(detail: str, status_code: int):
@@ -83,6 +87,16 @@ def update_profile(
 
     if email_taken:
         return None, _error("Email is already in use by another account", 400)
+
+    if phone_number is not None and not PHONE_NUMBER_PATTERN.match(phone_number):
+        return (
+            None,
+            _error(
+                "Phone number must include a country code and exactly "
+                "10 digits, for example +919876543210",
+                400,
+            ),
+        )
 
     profile = get_or_create_profile(db, user)
 
