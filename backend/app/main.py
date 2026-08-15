@@ -22,10 +22,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    # Allow localhost dev server(s). For quick local debugging accept both
-    # the Vite origin and 127.0.0.1. If issues persist, use ['*'] temporarily
-    # while developing, but avoid '*' in production.
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    # Allow localhost dev servers. Include Vite origins and 127.0.0.1 for dev.
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
