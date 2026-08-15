@@ -64,6 +64,7 @@ function Dashboard() {
     }
   };
   const token = localStorage.getItem('token')
+
   // Load dashboard when page opens
   useEffect(() => {
     fetchDashboardData();
@@ -305,6 +306,7 @@ function Dashboard() {
             Welcome to your employee dashboard
           </p>
         </div>
+
 
         {/* Leave Balance */}
         <section className="dashboard-section">

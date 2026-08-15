@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import LeaveHistory from "./pages/LeaveHistory";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="contact" element={<Contact />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/leave-history" element={<LeaveHistory />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       {/* Login page */}
