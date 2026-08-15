@@ -127,7 +127,7 @@ function Login() {
     } catch (error) {
       // Handle API error
       console.error("Login failed:", error);
-      alert("Login failed. Please check your email and password.");
+      alert(error.message || "Login failed. Please check your email and password.");
     } finally {
       // Stop loading after success or error
       setLoading(false);
