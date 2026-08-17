@@ -49,15 +49,24 @@ def list_leaves(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    leaves = leave_service.list_employee_leaves(
-        db=db,
-        user_id=current_user["user_id"],
-    )
+    try:
+        leaves = leave_service.list_employee_leaves(
+            db=db,
+            user_id=current_user["user_id"],
+        )
 
-    return [
-        leave_service.serialize_leave_spec(leave)
-        for leave in leaves
-    ]
+        return [
+            leave_service.serialize_leave_spec(leave)
+            for leave in leaves
+        ]
+    except Exception as error:
+        import traceback
+
+        traceback.print_exc()
+
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=500, detail=str(error))
 
 
 @router.put("/{leave_id}")

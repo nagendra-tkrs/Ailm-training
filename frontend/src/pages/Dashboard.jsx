@@ -55,9 +55,8 @@ function Dashboard() {
         localStorage.removeItem("token");
         navigate("/login");
       } else {
-        setError(
-          "Unable to load dashboard data."
-        );
+        // Surface the real error message when available to aid debugging
+        setError(error?.message || "Unable to load dashboard data.");
       }
     } finally {
       setLoading(false);

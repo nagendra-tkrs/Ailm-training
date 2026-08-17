@@ -1,0 +1,91 @@
+Day 6 — Frontend: Leave History & Dashboard Improvements
+
+Date: 2026-08-14
+Branch: `frontend-trainee`
+
+Summary
+- Implemented a full Leave History page connected to the backend CRUD API (`/api/leaves`).
+- Added `leavesService.js` with `listMyLeaves`, `updateLeave`, and `deleteLeave` functions.
+- Added client-side filtering (date range + status) and client-side pagination (page size 8).
+- Implemented edit (PUT) and delete (DELETE) functionality for `pending` leaves only.
+- Improved the Leave History UI: professional layout, high-contrast text, clear table, and modal edit form.
+- Added a Leave History quick-card to the Dashboard which navigates to `/leave-history` and shows a pending-leave count badge.
+- Ensured API token / display mapping for `leave_type` values (CASUAL/SICK/EARNED) when editing.
+- All changes committed and pushed to `origin/frontend-trainee`.
+
+Recent commits (most recent first)
+- 833caf0 — feat(dashboard): show pending leave count on Leave History quick-card
+- ca348ab — feat(dashboard): add Leave History quick-card with navigation and styles
+- 26fbc13 — style(leave-history): improve professional layout, high-contrast text, neat table and form styles
+- df715a4 — fix(leave-history): use API tokens for update and display friendly leaveType
+- 7efbc34 — feat(leave-history): add Leave History page, service, styles, and route
+
+Files added / modified (frontend)
+- Added: `src/pages/LeaveHistory.jsx` — Leave History page component (filters, table, edit modal, delete confirmation)
+- Added: `src/pages/LeaveHistory.css` — Styles for the Leave History page
+- Added: `src/services/leavesService.js` — API client for `/api/leaves` (list, update, delete)
+- Modified: `src/App.jsx` — registered route `/leave-history`
+- Modified: `src/pages/Dashboard.jsx` — added Leave History quick-card and pending count badge
+- Modified: `src/pages/Dashboard.css` — quick-card styling
+- Modified: `src/pages/Dashboard.css` and `src/pages/LeaveHistory.css` — visual polish and accessibility improvements
+- Added: `frontend/docs/Day 5 API Integration.md` and `frontend/docs/List of frontend files created-modified.md` (documentation files)
+- Added: `frontend/docs/day 6.md` (this file)
+
+Backend notes
+- The backend endpoints used:
+  - `GET /api/leaves` — list employee leaves (returns snake_case fields; we map to UI-friendly names)
+  - `PUT /api/leaves/{leave_id}` — update leave (expects `leave_type` == `CASUAL|SICK|EARNED`, `start_date`, `end_date`, `reason`)
+  - `DELETE /api/leaves/{leave_id}` — delete leave
+- Schemas and enums used: `leave_crud.py` defines `leave_type` as Literal[`CASUAL`,`SICK`,`EARNED`] and response fields include `status` and `created_at`.
+
+How UI maps API fields
+- API `leave_type` (CASUAL/SICK/EARNED) ↔ UI display `Casual Leave`, `Sick Leave`, `Earned Leave`.
+- API `start_date`, `end_date`, `leave_days`, `reason`, `status`, `created_at` mapped to UI columns.
+
+How to run locally (frontend + backend)
+1) Start backend (in backend folder):
+
+```powershell
+Set-Location D:\Ailm-training\backend
+. .\venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload --port 5000
+```
+
+2) Start frontend (in frontend folder):
+
+```powershell
+Set-Location D:\Ailm-training\frontend
+npm install
+npm run dev
+```
+
+3) Open in browser:
+- Dev server (Vite): http://localhost:5173
+- Dashboard: http://localhost:5173/dashboard
+- Leave History: http://localhost:5173/leave-history
+
+Notes and testing
+- After applying a leave (Dashboard → Apply Leave), the dashboard calls `fetchDashboardData()`; the quick-card badge and Leave History page read from the backend when loaded. If you need automatic cross-page synchronization, consider adding a cache layer (React Query) or a small Context provider; I can implement that.
+- Pagination is currently client-side because the backend `GET /api/leaves` returns a full list without pagination metadata. If server-side paging is preferred, backend endpoints can be extended to accept `?page=` and `?per_page=` parameters and return metadata.
+- Make sure to hard-reload the dev page or disable cache in DevTools after pulling changes.
+
+Remaining / Next steps (recommended)
+- Add automated UI tests or manual screenshots for deliverables.
+- Optionally implement React Query for robust cross-page cache and automatic invalidation.
+- Add server-side pagination and filtering if dataset grows.
+- Improve timestamps formatting (e.g., `YYYY-MM-DD HH:mm`) and add locale formatting.
+
+Status of tasks
+- Leave History page: DONE
+- Edit / Delete pending: DONE
+- Dashboard quick-card with badge: DONE
+- Styling polish: DONE
+- Tests & screenshots: TODO (please run locally and capture screenshots for final deliverable)
+
+If you want, I can now:
+- Implement React Query to auto-sync Dashboard and Leave History after mutations, or
+- Add server-side pagination support, or
+- Capture automated screenshots using Playwright and produce the final Day 6 deliverables.
+
+---
+Generated by automation on 2026-08-14

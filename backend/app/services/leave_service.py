@@ -168,28 +168,56 @@ def get_dashboard_data(db: Session, user_id: int) -> dict:
         "earned": balance_map.get("Earned Leave", 0),
     }
 
-    pending_leaves = (
-        db.query(Leave)
+    # Query only the specific columns we need to avoid DB errors when the
+    # optional `employee_id` column is missing in development databases.
+    pending_rows = (
+        db.query(
+            Leave.id,
+            Leave.leave_type,
+            Leave.start_date,
+            Leave.end_date,
+            Leave.days,
+            Leave.reason,
+            Leave.status,
+            Leave.created_date,
+        )
         .filter(Leave.user_id == user_id, Leave.status == "pending")
         .order_by(Leave.id.desc())
         .all()
     )
 
-    approved_leaves = (
-        db.query(Leave)
+    approved_rows = (
+        db.query(
+            Leave.id,
+            Leave.leave_type,
+            Leave.start_date,
+            Leave.end_date,
+            Leave.days,
+            Leave.reason,
+            Leave.status,
+            Leave.created_date,
+        )
         .filter(Leave.user_id == user_id, Leave.status == "approved")
         .order_by(Leave.id.desc())
         .all()
     )
 
+    def row_to_dict(row):
+        return {
+            "id": row[0],
+            "leaveType": row[1],
+            "startDate": row[2].isoformat() if row[2] else None,
+            "endDate": row[3].isoformat() if row[3] else None,
+            "days": row[4],
+            "reason": row[5],
+            "status": row[6],
+            "createdDate": row[7].isoformat() if row[7] else None,
+        }
+
     return {
         "leaveBalance": leave_balance,
-        "pendingLeaves": [
-            serialize_leave(leave) for leave in pending_leaves
-        ],
-        "approvedLeaves": [
-            serialize_leave(leave) for leave in approved_leaves
-        ],
+        "pendingLeaves": [row_to_dict(r) for r in pending_rows],
+        "approvedLeaves": [row_to_dict(r) for r in approved_rows],
     }
 
 

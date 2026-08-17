@@ -22,7 +22,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    # Allow localhost dev server(s). For quick local debugging accept both
+    # the Vite origin and 127.0.0.1. If issues persist, use ['*'] temporarily
+    # while developing, but avoid '*' in production.
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -83,3 +86,4 @@ def get_current_user_info(
         "message": "Authentication successful",
         "user": current_user
     }
+    
