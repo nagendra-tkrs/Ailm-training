@@ -38,6 +38,7 @@ function Dashboard() {
       // Check JWT
       if (!token) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -53,21 +54,22 @@ function Dashboard() {
         error.message === "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
       } else {
-        setError(
-          "Unable to load dashboard data."
-        );
+        // Surface the real error message when available to aid debugging
+        setError(error?.message || "Unable to load dashboard data.");
       }
     } finally {
       setLoading(false);
     }
   };
+  const token = localStorage.getItem('token')
 
   // Load dashboard when page opens
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [token]);
 
   // Automatically calculate leave days
   useEffect(() => {
@@ -204,6 +206,7 @@ function Dashboard() {
 
     if (!token) {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       navigate("/login");
       return;
     }
@@ -253,6 +256,7 @@ function Dashboard() {
         "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -306,6 +310,7 @@ function Dashboard() {
           </p>
         </div>
 
+
         {/* Leave Balance */}
         <section className="dashboard-section">
           <h2>Leave Balance</h2>
@@ -344,6 +349,21 @@ function Dashboard() {
             </p>
           )}
         </section>
+
+        {/* Quick link to Leave History */}
+        <div
+          className="leave-history-quickcard"
+          onClick={() => navigate('/leave-history')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter') navigate('/leave-history'); }}
+        >
+          <div className="quickcard-top">
+            <h3>Leave History</h3>
+            <span className="badge">{pendingLeaves.length || 0}</span>
+          </div>
+          <p>View and manage your leave requests</p>
+        </div>
 
         {/* Pending Leaves */}
         <section className="dashboard-section">

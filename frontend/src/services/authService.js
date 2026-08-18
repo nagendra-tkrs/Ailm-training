@@ -16,7 +16,7 @@ export const loginUser = async (email, password) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Login failed");
+      throw new Error(data.detail || data.message || "Login failed");
     }
 
     return data;
@@ -25,7 +25,7 @@ export const loginUser = async (email, password) => {
   }
 };
 
-export const registerUser = async (name, email, password, role) => {
+export const registerUser = async (name, email, password) => {
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
@@ -36,14 +36,13 @@ export const registerUser = async (name, email, password, role) => {
         name,
         email,
         password,
-        role,
       }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Registration failed");
+      throw new Error(data.detail || data.message || "Registration failed");
     }
 
     return data;
