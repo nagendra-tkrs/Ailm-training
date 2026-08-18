@@ -193,7 +193,7 @@ function LeaveHistory() {
           <div className="loading">Loading...</div>
         ) : error ? (
           <div className="error">{error}</div>
-        ) : filteredLeaves.length === 0 ? (
+        ) : leaves.length === 0 ? (
           <div className="empty">No leave records found.</div>
         ) : (
           <>
