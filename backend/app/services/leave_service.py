@@ -105,6 +105,11 @@ def apply_leave(
     days: int,
     reason: str
 ):
+    # Normalize leave type
+    normalized = normalize_leave_type(leave_type)
+    if normalized is None:
+        return None, "Invalid leave type"
+
     # Date order check
     if start_date > end_date:
         return None, "Start date cannot be after end date"
@@ -119,7 +124,7 @@ def apply_leave(
         return None, "You already have a leave request overlapping these dates"
 
     # Leave balance check
-    balance = get_balance_row(db, user_id, leave_type)
+    balance = get_balance_row(db, user_id, normalized)
 
     if balance is None:
         return None, f"Leave balance not configured for '{leave_type}'"
@@ -135,7 +140,7 @@ def apply_leave(
 
     leave = Leave(
         user_id=user_id,
-        leave_type=leave_type,
+        leave_type=normalized,
         start_date=start_date,
         end_date=end_date,
         days=days,

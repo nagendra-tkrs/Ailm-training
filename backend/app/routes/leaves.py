@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -77,11 +77,11 @@ def my_leaves(
 
 @router.get("/all")
 def all_leaves(
-    status: Optional[str] = None,
+    leave_status: Optional[str] = Query(None, alias="status"),
     current_user: dict = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
-    if status is not None and status not in VALID_LEAVE_STATUSES:
+    if leave_status is not None and leave_status not in VALID_LEAVE_STATUSES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid status filter. Use: {', '.join(VALID_LEAVE_STATUSES)}"
@@ -90,7 +90,7 @@ def all_leaves(
     try:
         leaves = leave_service.get_all_leaves(
             db=db,
-            status_filter=status,
+            status_filter=leave_status,
         )
     except SQLAlchemyError:
         logger.error("Database error fetching all leaves", exc_info=True)
