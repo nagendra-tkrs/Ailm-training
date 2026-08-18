@@ -11,4 +11,4 @@ class RegisterRequest(BaseModel):
 
 class LoginRequest(BaseModel):
     email: EmailStr
-    password: str = Field(..., min_length=1, max_length=100)
+    password: str = Field(..., min_length=1, max_length=12)
