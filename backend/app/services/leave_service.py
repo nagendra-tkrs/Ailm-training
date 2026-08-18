@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 from typing import Optional
 
@@ -6,6 +7,8 @@ from sqlalchemy.orm import Session
 from app.models.leave import Leave
 from app.models.leave_balance import LeaveBalance
 from app.models.user import User
+
+logger = logging.getLogger("app.leave_service")
 
 
 # Mapping between the Day-3 API values (CASUAL / SICK / EARNED) and the
@@ -144,8 +147,13 @@ def apply_leave(
     )
 
     db.add(leave)
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit leave application", exc_info=True)
+        db.rollback()
+        return None, "Failed to save leave request"
 
     return leave, None
 
@@ -257,8 +265,13 @@ def decide_leave(
             db.add(balance)
 
     leave.status = decision
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit leave decision", exc_info=True)
+        db.rollback()
+        return None, "Failed to save leave decision"
 
     return leave, None
 
@@ -277,7 +290,12 @@ def delete_leave(db: Session, leave_id: int, user_id: int):
         return "Only pending requests can be deleted"
 
     db.delete(leave)
-    db.commit()
+    try:
+        db.commit()
+    except Exception:
+        logger.error("Failed to commit leave deletion", exc_info=True)
+        db.rollback()
+        return "Failed to delete leave request"
 
     return None
 
@@ -387,8 +405,13 @@ def create_leave(
     )
 
     db.add(leave)
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit new leave", exc_info=True)
+        db.rollback()
+        return None, _leave_error("Failed to save leave request", 500)
 
     return leave, None
 
@@ -496,8 +519,13 @@ def update_leave(
     leave.days = leave_days
     leave.reason = reason
 
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit leave update", exc_info=True)
+        db.rollback()
+        return None, _leave_error("Failed to update leave request", 500)
 
     return leave, None
 
@@ -525,7 +553,12 @@ def delete_employee_leave(
         )
 
     db.delete(leave)
-    db.commit()
+    try:
+        db.commit()
+    except Exception:
+        logger.error("Failed to commit leave deletion", exc_info=True)
+        db.rollback()
+        return _leave_error("Failed to delete leave request", 500)
 
     return None
 
@@ -620,8 +653,13 @@ def approve_leave(
         db.add(balance)
 
     leave.status = "approved"
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit leave approval", exc_info=True)
+        db.rollback()
+        return None, _leave_error("Failed to approve leave", 500)
 
     return leave, None
 
@@ -643,7 +681,12 @@ def reject_leave(
         )
 
     leave.status = "rejected"
-    db.commit()
-    db.refresh(leave)
+    try:
+        db.commit()
+        db.refresh(leave)
+    except Exception:
+        logger.error("Failed to commit leave rejection", exc_info=True)
+        db.rollback()
+        return None, _leave_error("Failed to reject leave", 500)
 
     return leave, None

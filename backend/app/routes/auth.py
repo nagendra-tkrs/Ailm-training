@@ -1,4 +1,7 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -7,6 +10,7 @@ from app.services.auth_service import register_user, login_user
 from app.core.security import create_access_token
 from app.core.dependencies import get_current_user
 
+logger = logging.getLogger("app.routes.auth")
 
 router = APIRouter(
     prefix="/api/auth",
@@ -19,13 +23,20 @@ def register(
     request: RegisterRequest,
     db: Session = Depends(get_db)
 ):
-    user = register_user(
-        db=db,
-        name=request.name,
-        email=request.email,
-        password=request.password,
-        role="employee"
-    )
+    try:
+        user = register_user(
+            db=db,
+            name=request.name,
+            email=request.email,
+            password=request.password,
+            role="employee"
+        )
+    except SQLAlchemyError:
+        logger.error("Database error during registration", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Registration failed due to a server error"
+        )
 
     if user is None:
         raise HTTPException(
@@ -51,11 +62,18 @@ def login(
     request: LoginRequest,
     db: Session = Depends(get_db)
 ):
-    user = login_user(
-        db=db,
-        email=request.email,
-        password=request.password
-    )
+    try:
+        user = login_user(
+            db=db,
+            email=request.email,
+            password=request.password
+        )
+    except SQLAlchemyError:
+        logger.error("Database error during login", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Login failed due to a server error"
+        )
 
     if user is None:
         raise HTTPException(

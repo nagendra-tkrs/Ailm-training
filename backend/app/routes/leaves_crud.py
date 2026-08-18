@@ -1,4 +1,7 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -9,6 +12,7 @@ from app.schemas.leave_crud import (
 )
 from app.services import leave_service
 
+logger = logging.getLogger("app.routes.leaves_crud")
 
 router = APIRouter(
     prefix="/api/leaves",
@@ -29,14 +33,21 @@ def create_leave(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    leave, error = leave_service.create_leave(
-        db=db,
-        user_id=current_user["user_id"],
-        leave_type=request.leave_type,
-        start_date=request.start_date,
-        end_date=request.end_date,
-        reason=request.reason,
-    )
+    try:
+        leave, error = leave_service.create_leave(
+            db=db,
+            user_id=current_user["user_id"],
+            leave_type=request.leave_type,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            reason=request.reason,
+        )
+    except SQLAlchemyError:
+        logger.error("Database error creating leave", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create leave request"
+        )
 
     if error:
         _raise_error(error)
@@ -49,10 +60,17 @@ def list_leaves(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    leaves = leave_service.list_employee_leaves(
-        db=db,
-        user_id=current_user["user_id"],
-    )
+    try:
+        leaves = leave_service.list_employee_leaves(
+            db=db,
+            user_id=current_user["user_id"],
+        )
+    except SQLAlchemyError:
+        logger.error("Database error listing leaves", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch leaves"
+        )
 
     return [
         leave_service.serialize_leave_spec(leave)
@@ -67,15 +85,22 @@ def update_leave(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    leave, error = leave_service.update_leave(
-        db=db,
-        user_id=current_user["user_id"],
-        leave_id=leave_id,
-        leave_type=request.leave_type,
-        start_date=request.start_date,
-        end_date=request.end_date,
-        reason=request.reason,
-    )
+    try:
+        leave, error = leave_service.update_leave(
+            db=db,
+            user_id=current_user["user_id"],
+            leave_id=leave_id,
+            leave_type=request.leave_type,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            reason=request.reason,
+        )
+    except SQLAlchemyError:
+        logger.error("Database error updating leave %d", leave_id, exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update leave request"
+        )
 
     if error:
         _raise_error(error)
@@ -89,11 +114,18 @@ def delete_leave(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    error = leave_service.delete_employee_leave(
-        db=db,
-        user_id=current_user["user_id"],
-        leave_id=leave_id,
-    )
+    try:
+        error = leave_service.delete_employee_leave(
+            db=db,
+            user_id=current_user["user_id"],
+            leave_id=leave_id,
+        )
+    except SQLAlchemyError:
+        logger.error("Database error deleting leave %d", leave_id, exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete leave request"
+        )
 
     if error:
         _raise_error(error)

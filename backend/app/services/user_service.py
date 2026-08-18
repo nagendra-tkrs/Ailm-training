@@ -1,3 +1,4 @@
+import logging
 import random
 
 from sqlalchemy.orm import Session
@@ -6,13 +7,14 @@ from app.models.user import User
 from app.models.leave_balance import LeaveBalance
 from app.models.leave import Leave
 
-# Random 4-digit employee id range
+logger = logging.getLogger("app.user_service")
+
 EMPLOYEE_ID_MIN = 1000
 EMPLOYEE_ID_MAX = 9999
+MAX_ID_RETRIES = 100
 
 
 def generate_employee_id(db: Session) -> int:
-    """Return a random 4-digit employee id that is not already in use."""
     used = set(
         row[0]
         for row in db.query(User.employee_id)
@@ -20,11 +22,14 @@ def generate_employee_id(db: Session) -> int:
         .all()
     )
 
-    while True:
+    for _ in range(MAX_ID_RETRIES):
         candidate = random.randint(EMPLOYEE_ID_MIN, EMPLOYEE_ID_MAX)
 
         if candidate not in used:
             return candidate
+
+    logger.error("Could not generate unique employee ID after %d retries", MAX_ID_RETRIES)
+    raise RuntimeError("Could not generate unique employee ID")
 
 
 def list_users(db: Session) -> list:

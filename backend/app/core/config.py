@@ -1,8 +1,19 @@
+import logging
 import os
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger("app")
 
 
 class Settings:
@@ -19,7 +30,6 @@ class Settings:
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
         os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", "60")
     )
-
 
 
 settings = Settings()

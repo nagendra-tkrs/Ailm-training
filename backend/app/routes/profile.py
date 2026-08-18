@@ -1,4 +1,7 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -6,6 +9,7 @@ from app.core.dependencies import require_employee
 from app.schemas.profile import UpdateProfileRequest, ResetPasswordRequest
 from app.services import profile_service
 
+logger = logging.getLogger("app.routes.profile")
 
 router = APIRouter(
     prefix="/api/profile",
@@ -25,10 +29,17 @@ def get_profile(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    profile, error = profile_service.get_profile(
-        db=db,
-        user_id=current_user["user_id"],
-    )
+    try:
+        profile, error = profile_service.get_profile(
+            db=db,
+            user_id=current_user["user_id"],
+        )
+    except SQLAlchemyError:
+        logger.error("Database error fetching profile", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch profile"
+        )
 
     if error:
         _raise_error(error)
@@ -42,14 +53,21 @@ def update_profile(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    profile, error = profile_service.update_profile(
-        db=db,
-        user_id=current_user["user_id"],
-        name=request.name,
-        email=request.email,
-        address=request.address,
-        phone_number=request.phone_number,
-    )
+    try:
+        profile, error = profile_service.update_profile(
+            db=db,
+            user_id=current_user["user_id"],
+            name=request.name,
+            email=request.email,
+            address=request.address,
+            phone_number=request.phone_number,
+        )
+    except SQLAlchemyError:
+        logger.error("Database error updating profile", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update profile"
+        )
 
     if error:
         _raise_error(error)
@@ -63,12 +81,19 @@ def reset_password(
     current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
-    error = profile_service.reset_password(
-        db=db,
-        user_id=current_user["user_id"],
-        current_password=request.current_password,
-        new_password=request.new_password,
-    )
+    try:
+        error = profile_service.reset_password(
+            db=db,
+            user_id=current_user["user_id"],
+            current_password=request.current_password,
+            new_password=request.new_password,
+        )
+    except SQLAlchemyError:
+        logger.error("Database error resetting password", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update password"
+        )
 
     if error:
         _raise_error(error)

@@ -2,8 +2,6 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
-# Country code (1-3 digits, starting with +) followed by exactly 10 digits.
-# Example: +919876543210
 PHONE_NUMBER_PATTERN = r"^\+[1-9]\d{1,3}\d{10}$"
 
 
@@ -19,5 +17,5 @@ class UpdateProfileRequest(BaseModel):
 
 
 class ResetPasswordRequest(BaseModel):
-    current_password: str
+    current_password: str = Field(..., min_length=1, max_length=100)
     new_password: str = Field(..., min_length=8, max_length=100)

@@ -1,3 +1,4 @@
+import logging
 import re
 
 from sqlalchemy.orm import Session
@@ -5,6 +6,8 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.models.employee_profile import EmployeeProfile
 from app.core.security import hash_password, verify_password
+
+logger = logging.getLogger("app.profile_service")
 
 PHONE_NUMBER_PATTERN = re.compile(r"^\+[1-9]\d{1,3}\d{10}$")
 
@@ -34,8 +37,16 @@ def get_or_create_profile(
         )
 
         db.add(profile)
-        db.commit()
-        db.refresh(profile)
+        try:
+            db.commit()
+            db.refresh(profile)
+        except Exception:
+            logger.error(
+                "Failed to create profile for user %d", user.id,
+                exc_info=True,
+            )
+            db.rollback()
+            raise
 
     return profile
 
@@ -78,7 +89,6 @@ def update_profile(
     if user is None:
         return None, _error("User not found", 404)
 
-    # Email must stay unique in the users table (used for login)
     email_taken = (
         db.query(User)
         .filter(User.email == email, User.id != user_id)
@@ -105,12 +115,16 @@ def update_profile(
     profile.address = address
     profile.phone_number = phone_number
 
-    # Keep the users table in sync so login validation uses the new data
     user.name = name
     user.email = email
 
-    db.commit()
-    db.refresh(profile)
+    try:
+        db.commit()
+        db.refresh(profile)
+    except Exception:
+        logger.error("Failed to update profile for user %d", user_id, exc_info=True)
+        db.rollback()
+        return None, _error("Failed to update profile", 500)
 
     return serialize_profile(user, profile), None
 
@@ -130,6 +144,12 @@ def reset_password(
         return _error("Current password is incorrect", 400)
 
     user.password = hash_password(new_password)
-    db.commit()
+
+    try:
+        db.commit()
+    except Exception:
+        logger.error("Failed to reset password for user %d", user_id, exc_info=True)
+        db.rollback()
+        return _error("Failed to update password", 500)
 
     return None
