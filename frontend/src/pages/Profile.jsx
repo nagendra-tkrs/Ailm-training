@@ -55,7 +55,6 @@ function Profile() {
 
       if (error.message === "AUTHENTICATION_ERROR") {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -69,7 +68,6 @@ function Profile() {
   useEffect(() => {
     if (!token) {
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
       navigate("/login");
       return;
     }
@@ -131,7 +129,6 @@ function Profile() {
 
       if (error.message === "AUTHENTICATION_ERROR") {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -176,7 +173,6 @@ function Profile() {
 
       if (error.message === "AUTHENTICATION_ERROR") {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }

@@ -52,7 +52,6 @@ function LeaveHistory() {
       console.error(err);
       if (err.message === "AUTHENTICATION_ERROR") {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }

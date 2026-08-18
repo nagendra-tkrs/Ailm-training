@@ -38,7 +38,6 @@ function Dashboard() {
       // Check JWT
       if (!token) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -54,7 +53,6 @@ function Dashboard() {
         error.message === "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
       } else {
         // Surface the real error message when available to aid debugging
@@ -206,7 +204,6 @@ function Dashboard() {
 
     if (!token) {
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
       navigate("/login");
       return;
     }
@@ -256,7 +253,6 @@ function Dashboard() {
         "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
