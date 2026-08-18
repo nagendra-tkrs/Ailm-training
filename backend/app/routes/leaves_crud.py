@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import require_employee
 from app.schemas.leave_crud import (
     CreateLeaveRequest,
     UpdateLeaveRequest,
@@ -26,7 +26,7 @@ def _raise_error(error: dict):
 @router.post("")
 def create_leave(
     request: CreateLeaveRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     leave, error = leave_service.create_leave(
@@ -46,7 +46,7 @@ def create_leave(
 
 @router.get("")
 def list_leaves(
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     leaves = leave_service.list_employee_leaves(
@@ -64,7 +64,7 @@ def list_leaves(
 def update_leave(
     leave_id: int,
     request: UpdateLeaveRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     leave, error = leave_service.update_leave(
@@ -86,7 +86,7 @@ def update_leave(
 @router.delete("/{leave_id}")
 def delete_leave(
     leave_id: int,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     error = leave_service.delete_employee_leave(

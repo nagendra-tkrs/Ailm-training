@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import uuid
 
 from jose import jwt
 from argon2 import PasswordHasher
@@ -35,7 +36,8 @@ def create_access_token(
     role: str
 ) -> str:
 
-    expire = datetime.now(timezone.utc) + timedelta(
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(
         minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
@@ -43,6 +45,8 @@ def create_access_token(
         "sub": str(user_id),
         "email": email,
         "role": role,
+        "iat": now,
+        "jti": str(uuid.uuid4()),
         "exp": expire
     }
 

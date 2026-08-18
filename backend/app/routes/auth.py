@@ -5,8 +5,7 @@ from app.database.database import get_db
 from app.schemas.auth import RegisterRequest, LoginRequest
 from app.services.auth_service import register_user, login_user
 from app.core.security import create_access_token
-
-from app.core.dependencies import require_role
+from app.core.dependencies import get_current_user
 
 
 router = APIRouter(
@@ -25,7 +24,7 @@ def register(
         name=request.name,
         email=request.email,
         password=request.password,
-        role=request.role
+        role="employee"
     )
 
     if user is None:
@@ -72,15 +71,21 @@ def login(
 
     return {
         "access_token": access_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+        }
     }
 
 
-@router.get("/admin-test")
-def admin_test(
-    current_user: dict = Depends(require_role("admin"))
+@router.get("/me")
+def get_current_user_info(
+    current_user: dict = Depends(get_current_user)
 ):
     return {
-        "message": "Admin access granted",
+        "message": "Authentication successful",
         "user": current_user
     }

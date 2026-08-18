@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.core.dependencies import get_current_user, require_role
+from app.core.dependencies import get_current_user, require_admin
 from app.services import user_service
 from app.schemas.user import UserOut
 
@@ -11,14 +11,6 @@ router = APIRouter(
     prefix="/api/users",
     tags=["Users"]
 )
-
-
-@router.get("", response_model=list[UserOut])
-def list_users(
-    current_user: dict = Depends(require_role("admin")),
-    db: Session = Depends(get_db)
-):
-    return user_service.list_users(db=db)
 
 
 @router.get("/profile")
@@ -40,10 +32,18 @@ def my_profile(
     return profile
 
 
+@router.get("", response_model=list[UserOut])
+def list_users(
+    current_user: dict = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return user_service.list_users(db=db)
+
+
 @router.get("/{user_id}")
 def user_detail(
     user_id: int,
-    current_user: dict = Depends(require_role("admin")),
+    current_user: dict = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     profile = user_service.get_user_with_balances(

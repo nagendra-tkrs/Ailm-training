@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.core.dependencies import get_current_user, require_role
+from app.core.dependencies import require_employee, require_admin
 from app.schemas.leave import ApplyLeaveRequest
 from app.services import leave_service
 
@@ -18,7 +18,7 @@ router = APIRouter(
 @router.post("")
 def apply_leave(
     request: ApplyLeaveRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     leave, error = leave_service.apply_leave(
@@ -45,7 +45,7 @@ def apply_leave(
 
 @router.get("/my")
 def my_leaves(
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     leaves = leave_service.get_my_leaves(
@@ -59,7 +59,7 @@ def my_leaves(
 @router.get("/all")
 def all_leaves(
     status: Optional[str] = None,
-    current_user: dict = Depends(require_role("admin")),
+    current_user: dict = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     leaves = leave_service.get_all_leaves(
@@ -73,7 +73,7 @@ def all_leaves(
 @router.put("/{leave_id}/approve")
 def approve_leave(
     leave_id: int,
-    current_user: dict = Depends(require_role("admin")),
+    current_user: dict = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     leave, error = leave_service.decide_leave(
@@ -97,7 +97,7 @@ def approve_leave(
 @router.put("/{leave_id}/reject")
 def reject_leave(
     leave_id: int,
-    current_user: dict = Depends(require_role("admin")),
+    current_user: dict = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     leave, error = leave_service.decide_leave(
@@ -121,7 +121,7 @@ def reject_leave(
 @router.delete("/{leave_id}")
 def delete_leave(
     leave_id: int,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     error = leave_service.delete_leave(

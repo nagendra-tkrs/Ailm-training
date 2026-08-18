@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
@@ -12,7 +12,6 @@ from app.routes.dashboard import router as dashboard_router
 from app.routes.users import router as users_router
 from app.routes.admin import router as admin_router
 from app.routes.profile import router as profile_router
-from app.core.dependencies import get_current_user
 
 
 app = FastAPI(
@@ -22,10 +21,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",
-    ],
+    # Allow localhost dev server(s). For quick local debugging accept both
+    # the Vite origin and 127.0.0.1. If issues persist, use ['*'] temporarily
+    # while developing, but avoid '*' in production.
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,8 +67,7 @@ def database_test():
         return {
             "message": "Database connection failed",
             "error": str(error)
-        }
-
+    }
 
 @app.get("/health")
 def health_check():
@@ -78,11 +76,5 @@ def health_check():
     }
 
 
-@app.get("/api/auth/me")
-def get_current_user_info(
-    current_user: dict = Depends(get_current_user)
-):
-    return {
-        "message": "Authentication successful",
-        "user": current_user
-    }
+
+

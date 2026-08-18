@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import require_employee
 from app.schemas.profile import UpdateProfileRequest, ResetPasswordRequest
 from app.services import profile_service
 
@@ -22,7 +22,7 @@ def _raise_error(error: dict):
 
 @router.get("")
 def get_profile(
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     profile, error = profile_service.get_profile(
@@ -39,7 +39,7 @@ def get_profile(
 @router.put("")
 def update_profile(
     request: UpdateProfileRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     profile, error = profile_service.update_profile(
@@ -60,7 +60,7 @@ def update_profile(
 @router.put("/password")
 def reset_password(
     request: ResetPasswordRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_employee),
     db: Session = Depends(get_db)
 ):
     error = profile_service.reset_password(
