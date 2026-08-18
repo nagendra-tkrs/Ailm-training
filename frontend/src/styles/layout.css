@@ -1,0 +1,141 @@
+/* Layout styles for Header, Sidebar, Footer */
+
+.site-header {
+  background: #ffffff; /* solid white for clear contrast */
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Ensure header text is always fully visible */
+.site-header, .site-header * {
+  color: var(--text-h) !important;
+  opacity: 1 !important;
+}
+
+.site-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.site-brand .logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,var(--accent), #0b7280);
+  box-shadow: var(--shadow);
+}
+
+.site-brand h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-h) !important;
+}
+
+.site-nav a {
+  color: var(--text-h);
+  margin-left: 18px;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.site-nav a:hover,
+.site-nav a:focus {
+  color: var(--text-h);
+  background: var(--accent-bg);
+  text-decoration: none;
+}
+
+.site-nav a:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.site-sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid rgba(15,23,42,0.06);
+  padding: 22px;
+  box-sizing: border-box;
+  box-shadow: 2px 0 12px rgba(15,23,42,0.02);
+}
+
+/* Force sidebar content visibility */
+.site-sidebar, .site-sidebar * {
+  color: var(--text-h) !important;
+  opacity: 1 !important;
+}
+
+.site-sidebar h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.site-sidebar nav a {
+  display: block;
+  color: var(--text-h) !important;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-bottom: 8px;
+  opacity: 1 !important;
+  font-size: 15px;
+}
+.site-sidebar nav a:hover {
+  background: var(--accent-bg);
+  color: var(--text-h);
+}
+
+/* Ensure form controls and options use high contrast text */
+body, input, select, textarea, button, option {
+  color: var(--text-h);
+}
+
+.main-content {
+  flex: 1;
+  padding: 28px;
+}
+
+/* Ensure inputs and selects show visible placeholder and value colors */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: rgba(55,65,81,0.45);
+}
+
+input, select, textarea {
+  color: var(--text-h) !important;
+}
+
+.site-footer {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  text-align: center;
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* Footer visible text */
+.site-footer, .site-footer * {
+  color: var(--text-h) !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 820px) {
+  .site-sidebar { display: none; }
+  .main-content { padding: 18px; }
+}

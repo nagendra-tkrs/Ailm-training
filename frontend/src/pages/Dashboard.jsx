@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDashboardData } from "../services/dashboardService";
 import { applyLeave } from "../services/applyLeaveService";
@@ -27,6 +27,13 @@ function Dashboard() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
 
+  // Refs for date inputs so calendar icons can focus them
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
+
+  // Today's date as YYYY-MM-DD to restrict past dates
+  const todayIso = new Date().toISOString().split("T")[0];
+
   // Fetch Dashboard Data
   const fetchDashboardData = async () => {
     try {
@@ -38,7 +45,6 @@ function Dashboard() {
       // Check JWT
       if (!token) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -54,7 +60,6 @@ function Dashboard() {
         error.message === "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
       } else {
         // Surface the real error message when available to aid debugging
@@ -206,7 +211,6 @@ function Dashboard() {
 
     if (!token) {
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
       navigate("/login");
       return;
     }
@@ -256,7 +260,6 @@ function Dashboard() {
         "AUTHENTICATION_ERROR"
       ) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -572,6 +575,8 @@ function Dashboard() {
                 <input
                   id="startDate"
                   type="date"
+                  ref={startDateRef}
+                  min={todayIso}
                   value={startDate}
                   onChange={(e) => {
                     setStartDate(
@@ -582,6 +587,18 @@ function Dashboard() {
                     setSubmitError("");
                   }}
                 />
+
+                <button
+                  type="button"
+                  className="date-icon"
+                  aria-label="Open start date picker"
+                  onClick={() => startDateRef.current && startDateRef.current.showPicker ? startDateRef.current.showPicker() : startDateRef.current && startDateRef.current.focus()}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="5" width="18" height="16" rx="2" stroke="#444" strokeWidth="1.2"/>
+                    <path d="M16 3V7M8 3V7" stroke="#444" strokeWidth="1.2" strokeLinecap="round"/>
+                  </svg>
+                </button>
 
                 {formErrors.startDate && (
                   <p className="form-error">
@@ -601,6 +618,8 @@ function Dashboard() {
                 <input
                   id="endDate"
                   type="date"
+                  ref={endDateRef}
+                  min={todayIso}
                   value={endDate}
                   onChange={(e) => {
                     setEndDate(
@@ -611,6 +630,18 @@ function Dashboard() {
                     setSubmitError("");
                   }}
                 />
+
+                <button
+                  type="button"
+                  className="date-icon"
+                  aria-label="Open end date picker"
+                  onClick={() => endDateRef.current && endDateRef.current.showPicker ? endDateRef.current.showPicker() : endDateRef.current && endDateRef.current.focus()}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="5" width="18" height="16" rx="2" stroke="#444" strokeWidth="1.2"/>
+                    <path d="M16 3V7M8 3V7" stroke="#444" strokeWidth="1.2" strokeLinecap="round"/>
+                  </svg>
+                </button>
 
                 {formErrors.endDate && (
                   <p className="form-error">

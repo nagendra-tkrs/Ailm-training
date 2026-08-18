@@ -14,16 +14,17 @@ function LeaveHistory() {
   const [toDate, setToDate] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
-  // Pagination (client-side as backend does not provide paging)
+  // Pagination (server-capable; fallback to client-side if backend doesn't support)
   const [page, setPage] = useState(1);
-  const pageSize = 8;
+  const [perPage, setPerPage] = useState(8);
+  const [total, setTotal] = useState(0);
 
   // Edit state
   const [editing, setEditing] = useState(null);
   const [editPayload, setEditPayload] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchLeaves = async () => {
+  const fetchLeaves = async (requestedPage = page) => {
     try {
       setLoading(true);
       setError("");
@@ -34,25 +35,47 @@ function LeaveHistory() {
         return;
       }
 
-      const data = await listMyLeaves(token);
-      // API returns snake_case spec; normalize to camelCase for UI convenience
-      const normalized = data.map((l) => ({
-        id: l.id,
-        leaveType: TOKEN_TO_DISPLAY[l.leave_type] || l.leave_type,
-        startDate: l.start_date,
-        endDate: l.end_date,
-        leaveDays: l.leave_days,
-        reason: l.reason,
-        status: l.status.toLowerCase(),
-        createdAt: l.created_at,
-      }));
+      const params = {
+        page: requestedPage,
+        per_page: perPage,
+        from_date: fromDate,
+        to_date: toDate,
+        status: statusFilter && statusFilter !== "All" ? statusFilter.toLowerCase() : undefined,
+      };
+
+      const data = await listMyLeaves(token, params);
+
+      // data: { items: [...], total, page, per_page }
+      const items = data.items || [];
+      const normalized = items.map((l) => {
+        const isSnake = !!l.leave_type || !!l.start_date;
+        const rawType = isSnake ? l.leave_type : l.leaveType;
+        const rawStatus = l.status || (l.status && l.status.toLowerCase());
+
+        const statusRaw = l.status || l.status;
+
+        return {
+          id: l.id,
+          leaveType: TOKEN_TO_DISPLAY[rawType] || rawType,
+          startDate: isSnake ? l.start_date : l.startDate,
+          endDate: isSnake ? l.end_date : l.endDate,
+          leaveDays: isSnake ? l.leave_days : l.leaveDays,
+          reason: l.reason,
+          status: (statusRaw || "").toString().toLowerCase(),
+          createdAt: isSnake ? l.created_at : l.createdAt,
+        };
+      });
 
       setLeaves(normalized);
+      setTotal(data.total || normalized.length);
+      setPage(data.page || requestedPage);
+      setPerPage(data.per_page || perPage);
+
+      return { items: normalized, total: data.total || normalized.length, page: data.page || requestedPage, per_page: data.per_page || perPage };
     } catch (err) {
       console.error(err);
       if (err.message === "AUTHENTICATION_ERROR") {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         navigate("/login");
         return;
       }
@@ -63,19 +86,17 @@ function LeaveHistory() {
   };
 
   useEffect(() => {
-    fetchLeaves();
-  }, []);
+    fetchLeaves(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromDate, toDate, statusFilter, perPage]);
 
-  const filteredLeaves = leaves.filter((l) => {
-    if (statusFilter !== "All" && l.status !== statusFilter.toLowerCase()) return false;
-    if (fromDate && l.startDate < fromDate) return false;
-    if (toDate && l.endDate > toDate) return false;
-    return true;
-  });
+  useEffect(() => {
+    fetchLeaves(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredLeaves.length / pageSize));
-
-  const pageItems = filteredLeaves.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const pageItems = leaves;
 
   const DISPLAY_TO_TOKEN = {
     "Casual Leave": "CASUAL",
@@ -110,8 +131,10 @@ function LeaveHistory() {
     try {
       const token = localStorage.getItem("token");
       await updateLeave(editing.id, editPayload, token);
-      await fetchLeaves();
+      alert("Leave updated successfully.");
       cancelEdit();
+      // Refresh current page
+      await fetchLeaves(page);
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to update leave");
@@ -125,7 +148,12 @@ function LeaveHistory() {
     try {
       const token = localStorage.getItem("token");
       await deleteLeave(leave.id, token);
-      await fetchLeaves();
+      alert("Leave deleted successfully.");
+      // After deletion, refresh. If current page becomes empty, go to previous page.
+      const result = await fetchLeaves(page);
+      if (result.items.length === 0 && page > 1) {
+        setPage((p) => p - 1);
+      }
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to delete leave");
@@ -165,7 +193,7 @@ function LeaveHistory() {
           <div className="loading">Loading...</div>
         ) : error ? (
           <div className="error">{error}</div>
-        ) : filteredLeaves.length === 0 ? (
+        ) : leaves.length === 0 ? (
           <div className="empty">No leave records found.</div>
         ) : (
           <>

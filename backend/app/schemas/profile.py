@@ -18,8 +18,8 @@ class UpdateProfileRequest(BaseModel):
     @field_validator("email")
     @classmethod
     def validate_email(cls, v):
-        if not v.endswith("@gmail.com"):
-            raise ValueError("Only @gmail.com email addresses are allowed")
+        if not v.endswith(("@gmail.com", "@company.com", "@yahoo.com")):
+            raise ValueError("Only @gmail.com, @company.com, or @yahoo.com email addresses are allowed")
         return v.lower()
 
 

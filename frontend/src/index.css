@@ -1,15 +1,15 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --text: #374151; /* darker body text for better contrast */
+  --text-h: #0f172a;
+  --bg: #f4f6f8;
+  --border: rgba(15,23,42,0.06);
+  --code-bg: #f8fafb;
+  --accent: #0ea5a4; /* teal */
+  --accent-bg: rgba(14,165,164,0.06);
+  --accent-border: rgba(14,165,164,0.35);
+  --social-bg: rgba(240, 249, 248, 0.6);
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(15,23,42,0.06) 0 10px 15px -3px, rgba(15,23,42,0.03) 0 4px 6px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -33,7 +33,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;
-    --text-h: #f3f4f6;
+    /* Force darker headings/text per user request */
+    --text-h: #0f172a;
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
@@ -53,6 +54,18 @@
 body {
   margin: 0;
 }
+
+/* Global override to ensure readable text color everywhere */
+html, body, #root {
+  color: var(--text-h) !important;
+}
+
+/* Ensure common text elements are visible */
+h1,h2,h3,h4,h5,h6,p,span,a,li,td,th,label {
+  color: var(--text-h) !important;
+}
+
+a { color: var(--text-h) !important; }
 
 #root {
   width: 1126px;
