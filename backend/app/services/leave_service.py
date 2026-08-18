@@ -430,6 +430,53 @@ def list_employee_leaves(db: Session, user_id: int) -> list:
     )
 
 
+def get_employee_leave_list(
+    db: Session,
+    user_id: int,
+    status_filter: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    page: int = 1,
+    limit: int = 8,
+):
+    if status_filter and status_filter not in ("pending", "approved", "rejected"):
+        return None, _leave_error(
+            "Invalid status filter. Use pending, approved or rejected",
+            400,
+        )
+
+    query = db.query(Leave).filter(Leave.user_id == user_id)
+
+    if status_filter:
+        query = query.filter(Leave.status == status_filter)
+
+    if start_date is not None:
+        query = query.filter(Leave.start_date >= start_date)
+
+    if end_date is not None:
+        query = query.filter(Leave.end_date <= end_date)
+
+    total_records = query.count()
+
+    leaves = (
+        query.order_by(Leave.id.desc())
+        .offset((page - 1) * limit)
+        .limit(limit)
+        .all()
+    )
+
+    items = [serialize_leave_spec(leave) for leave in leaves]
+
+    pagination = {
+        "current_page": page,
+        "page_size": limit,
+        "total_records": total_records,
+        "total_pages": (total_records + limit - 1) // limit if limit else 0,
+    }
+
+    return {"leaves": items, "pagination": pagination}, None
+
+
 def update_leave(
     db: Session,
     user_id: int,

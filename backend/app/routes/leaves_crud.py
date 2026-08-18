@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import date
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -46,19 +48,29 @@ def create_leave(
 
 @router.get("")
 def list_leaves(
+    status: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    page: int = Query(1, ge=1),
+    limit: int = Query(8, ge=1, le=100),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     try:
-        leaves = leave_service.list_employee_leaves(
+        result, error = leave_service.get_employee_leave_list(
             db=db,
             user_id=current_user["user_id"],
+            status_filter=status,
+            start_date=start_date,
+            end_date=end_date,
+            page=page,
+            limit=limit,
         )
 
-        return [
-            leave_service.serialize_leave_spec(leave)
-            for leave in leaves
-        ]
+        if error:
+            _raise_error(error)
+
+        return result
     except Exception as error:
         import traceback
 
