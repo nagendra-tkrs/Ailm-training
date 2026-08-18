@@ -200,6 +200,29 @@
   color: var(--text-h);
 }
 
+/* Date input with icon */
+.leave-form input[type="date"] {
+  width: calc(100% - 44px);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.leave-form .date-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  padding: 0;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.leave-form .date-icon svg { display:block; }
+
 /* Force text fill color for webkit-based browsers (date inputs, placeholders) */
 .leave-form input,
 .leave-form textarea,
