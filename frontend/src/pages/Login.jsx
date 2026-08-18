@@ -122,6 +122,12 @@ function Login() {
       // Store JWT for authenticated API requests
       localStorage.setItem("token", token);
 
+      // Store user info for role-based UI
+      const user = response?.user;
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
       // Navigate to Employee Dashboard
       navigate("/dashboard");
     } catch (error) {

@@ -135,8 +135,7 @@ function Signup() {
       const response = await registerUser(
         name,
         email,
-        password,
-        "employee"
+        password
       );
 
       console.log("Registration successful:", response);
