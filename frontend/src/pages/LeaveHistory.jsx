@@ -19,6 +19,19 @@ function LeaveHistory() {
   const [perPage, setPerPage] = useState(8);
   const [total, setTotal] = useState(0);
 
+  // Token/display mappings used by normalization helpers
+  const DISPLAY_TO_TOKEN = {
+    "Casual Leave": "CASUAL",
+    "Sick Leave": "SICK",
+    "Earned Leave": "EARNED",
+  };
+
+  const TOKEN_TO_DISPLAY = {
+    CASUAL: "Casual Leave",
+    SICK: "Sick Leave",
+    EARNED: "Earned Leave",
+  };
+
   // Edit state
   const [editing, setEditing] = useState(null);
   const [editPayload, setEditPayload] = useState({});
@@ -50,18 +63,22 @@ function LeaveHistory() {
       const normalized = items.map((l) => {
         const isSnake = !!l.leave_type || !!l.start_date;
         const rawType = isSnake ? l.leave_type : l.leaveType;
-        const rawStatus = l.status || (l.status && l.status.toLowerCase());
 
-        const statusRaw = l.status || l.status;
+        // Normalize status to a lowercase string
+        const statusRaw = (l.status || "").toString().toLowerCase();
+
+        // Normalize leave type: backend might send token-style (CASUAL) or display-style (Casual Leave)
+        const tUpper = (rawType || "").toString().toUpperCase();
+        const displayType = TOKEN_TO_DISPLAY[rawType] || TOKEN_TO_DISPLAY[tUpper] || rawType;
 
         return {
           id: l.id,
-          leaveType: TOKEN_TO_DISPLAY[rawType] || rawType,
+          leaveType: displayType,
           startDate: isSnake ? l.start_date : l.startDate,
           endDate: isSnake ? l.end_date : l.endDate,
           leaveDays: isSnake ? l.leave_days : l.leaveDays,
           reason: l.reason,
-          status: (statusRaw || "").toString().toLowerCase(),
+          status: statusRaw,
           createdAt: isSnake ? l.created_at : l.createdAt,
         };
       });
@@ -97,18 +114,6 @@ function LeaveHistory() {
 
   const totalPages = Math.max(1, Math.ceil(total / perPage));
   const pageItems = leaves;
-
-  const DISPLAY_TO_TOKEN = {
-    "Casual Leave": "CASUAL",
-    "Sick Leave": "SICK",
-    "Earned Leave": "EARNED",
-  };
-
-  const TOKEN_TO_DISPLAY = {
-    CASUAL: "Casual Leave",
-    SICK: "Sick Leave",
-    EARNED: "Earned Leave",
-  };
 
   const startEdit = (leave) => {
     setEditing(leave);

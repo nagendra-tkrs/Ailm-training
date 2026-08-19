@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_URL as API_BASE_URL } from "./api";
 
 const handleAuthError = (response) => {
   if (response.status === 401 || response.status === 403) {

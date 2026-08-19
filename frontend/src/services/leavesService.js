@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api";
+import { API_URL } from "./api";
 
 export const listMyLeaves = async (token, params = {}) => {
   const url = new URL(`${API_URL}/leaves`);

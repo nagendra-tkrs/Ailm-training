@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_URL as API_BASE_URL } from "./api";
 
 export const getDashboardData = async (token) => {
   const response = await fetch(`${API_BASE_URL}/employee/dashboard`, {

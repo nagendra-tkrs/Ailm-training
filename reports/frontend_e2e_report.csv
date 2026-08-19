@@ -1,0 +1,12 @@
+Test ID,Test Name,Passed,HTTP Status,Short Details,Notes,Timestamp
+1,Register employee,PASS,200,"User registered successfully; user id=12","",2026-08-18T21:35:48Z
+2,Register admin,PASS,200,"User registered successfully; user id=13","",2026-08-18T21:35:50Z
+3,Employee login,PASS,200,"access_token returned","token redacted",2026-08-18T21:35:52Z
+4,Admin login,PASS,200,"access_token returned","token redacted",2026-08-18T21:35:54Z
+5,Employee dashboard,PASS,200,"leaveBalance: casual=12,sick=10,earned=20","",2026-08-18T21:35:56Z
+6,Apply leave (employee),PASS,200,"Leave request submitted successfully; leave id=15","Sent display-style leaveType (Casual Leave)",2026-08-18T21:35:58Z
+7,Admin approve leave,PASS,200,"Leave request approved; leave id=15","",2026-08-18T21:35:58Z
+8,Employee sees approved leave,PASS,200,"Leave id=15 status=approved","",2026-08-18T21:36:00Z
+9,Get profile,PASS,,"Profile returned for employee id=8277","",2026-08-18T21:36:02Z
+10,Update profile,PASS,200,"Profile updated; name appended ' E2E'","",2026-08-18T21:36:04Z
+11,Attempt employee delete approved leave (should fail),PASS,400,"Expected failure: Only pending leave requests can be deleted","Backend correctly prevents deleting approved leaves",2026-08-18T21:36:06Z

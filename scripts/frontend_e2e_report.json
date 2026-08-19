@@ -1,0 +1,172 @@
+[
+  {
+    "test": "Register employee",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "message": "User registered successfully",
+        "user": {
+          "id": 12,
+          "employee_id": 8277,
+          "name": "Test Employee",
+          "email": "e1787106945@example.com",
+          "role": "employee",
+          "created_date": "2026-08-18T21:35:48"
+        }
+      }
+    }
+  },
+  {
+    "test": "Register admin",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "message": "User registered successfully",
+        "user": {
+          "id": 13,
+          "employee_id": 4134,
+          "name": "Test Admin",
+          "email": "a1787106945@example.com",
+          "role": "admin",
+          "created_date": "2026-08-18T21:35:50"
+        }
+      }
+    }
+  },
+  {
+    "test": "Employee login",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImVtYWlsIjoiZTE3ODcxMDY5NDVAZXhhbXBsZS5jb20iLCJyb2xlIjoiZW1wbG95ZWUiLCJleHAiOjE3ODcxMTA1NTJ9.5nvS864CovO7QHrJtLGmJ4-x09WHdVrUZilB3LwSmc8",
+        "token_type": "bearer"
+      }
+    }
+  },
+  {
+    "test": "Admin login",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoiYTE3ODcxMDY5NDVAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODcxMTA1NTR9.Ova3_6ClZZE-v7tRuKIOIgjYWRR-T6u7fRV3Y8BS9Yo",
+        "token_type": "bearer"
+      }
+    }
+  },
+  {
+    "test": "Employee dashboard",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "leaveBalance": {
+          "casual": 12,
+          "sick": 10,
+          "earned": 20
+        },
+        "pendingLeaves": [],
+        "approvedLeaves": []
+      }
+    }
+  },
+  {
+    "test": "Apply leave (employee)",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "message": "Leave request submitted successfully",
+        "leave": {
+          "id": 15,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-20",
+          "endDate": "2026-08-21",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T21:35:58"
+        }
+      }
+    }
+  },
+  {
+    "test": "Admin approve leave",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "message": "Leave request approved",
+        "leave": {
+          "id": 15,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-20",
+          "endDate": "2026-08-21",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "approved",
+          "createdDate": "2026-08-18T21:35:58"
+        }
+      }
+    }
+  },
+  {
+    "test": "Employee sees approved leave",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "leave": {
+        "id": 15,
+        "leaveType": "Casual Leave",
+        "startDate": "2026-08-20",
+        "endDate": "2026-08-21",
+        "days": 2,
+        "reason": "E2E test leave",
+        "status": "approved",
+        "createdDate": "2026-08-18T21:35:58"
+      }
+    }
+  },
+  {
+    "test": "Get profile",
+    "ok": true,
+    "details": {
+      "profile": {
+        "employee_id": 8277,
+        "role": "employee",
+        "name": "Test Employee",
+        "email": "e1787106945@example.com",
+        "address": null,
+        "phone_number": null
+      }
+    }
+  },
+  {
+    "test": "Update profile",
+    "ok": true,
+    "details": {
+      "status": 200,
+      "body": {
+        "employee_id": 8277,
+        "role": "employee",
+        "name": "Test Employee E2E",
+        "email": "e1787106945@example.com",
+        "address": null,
+        "phone_number": null
+      }
+    }
+  },
+  {
+    "test": "Attempt employee delete approved leave (should fail)",
+    "ok": true,
+    "details": {
+      "status": 400,
+      "body": {
+        "detail": "Only pending leave requests can be deleted"
+      }
+    }
+  }
+]
