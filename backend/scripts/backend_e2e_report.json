@@ -1,0 +1,1372 @@
+[
+  {
+    "test": "GET /",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Employee Leave Management Backend is running"
+    },
+    "notes": "OK"
+  },
+  {
+    "test": "GET /health",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "status": "ok"
+    },
+    "notes": "OK"
+  },
+  {
+    "test": "GET /db-test",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "MySQL database connected successfully"
+    },
+    "notes": "OK"
+  },
+  {
+    "test": "Register employee",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "User registered successfully",
+      "user": {
+        "id": 47,
+        "employee_id": 9806,
+        "name": "Test Employee",
+        "email": "testemp1787110726@gmail.com",
+        "role": "employee",
+        "created_date": "2026-08-18T22:38:55"
+      }
+    },
+    "notes": "user_id=47"
+  },
+  {
+    "test": "Login seed admin",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "token_type": "bearer",
+      "user": {
+        "id": 24,
+        "name": "System Admin",
+        "email": "admin@gmail.com",
+        "role": "admin"
+      }
+    },
+    "notes": "user_id=24"
+  },
+  {
+    "test": "Register employee 2 (yahoo)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "User registered successfully",
+      "user": {
+        "id": 48,
+        "employee_id": 8752,
+        "name": "Employee Two",
+        "email": "testemp21787110726@yahoo.com",
+        "role": "employee",
+        "created_date": "2026-08-18T22:38:59"
+      }
+    },
+    "notes": "user_id=48"
+  },
+  {
+    "test": "Register employee 3 (company)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "User registered successfully",
+      "user": {
+        "id": 49,
+        "employee_id": 3996,
+        "name": "Employee Three",
+        "email": "testemp31787110726@company.com",
+        "role": "employee",
+        "created_date": "2026-08-18T22:39:01"
+      }
+    },
+    "notes": "user_id=49"
+  },
+  {
+    "test": "Register duplicate email (should fail)",
+    "ok": true,
+    "status_code": 409,
+    "body": {
+      "detail": "Email already registered"
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Register invalid domain (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> email",
+          "message": "Value error, Only @gmail.com, @company.com, or @yahoo.com email addresses are allowed"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Register short password (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> password",
+          "message": "String should have at least 8 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Register short name (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> name",
+          "message": "String should have at least 2 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Register empty name (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> name",
+          "message": "String should have at least 2 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Register empty body (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body",
+          "message": "Field required"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Employee login",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "token_type": "bearer",
+      "user": {
+        "id": 47,
+        "name": "Test Employee",
+        "email": "testemp1787110726@gmail.com",
+        "role": "employee"
+      }
+    },
+    "notes": "token obtained"
+  },
+  {
+    "test": "Employee 2 login (yahoo)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "token_type": "bearer",
+      "user": {
+        "id": 48,
+        "name": "Employee Two",
+        "email": "testemp21787110726@yahoo.com",
+        "role": "employee"
+      }
+    },
+    "notes": "token obtained"
+  },
+  {
+    "test": "Employee 3 login (company)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "token_type": "bearer",
+      "user": {
+        "id": 49,
+        "name": "Employee Three",
+        "email": "testemp31787110726@company.com",
+        "role": "employee"
+      }
+    },
+    "notes": "token obtained"
+  },
+  {
+    "test": "Login wrong password (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> password",
+          "message": "String should have at most 12 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Login non-existent user (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Invalid email or password"
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Login invalid domain (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> email",
+          "message": "Value error, Only @gmail.com, @company.com, or @yahoo.com email addresses are allowed"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Login empty body (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> email",
+          "message": "Field required"
+        },
+        {
+          "field": "body -> password",
+          "message": "Field required"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "GET /auth/me (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Authentication successful",
+      "user": {
+        "user_id": 47,
+        "email": "testemp1787110726@gmail.com",
+        "role": "employee"
+      }
+    },
+    "notes": "User info"
+  },
+  {
+    "test": "GET /auth/me (admin)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Authentication successful",
+      "user": {
+        "user_id": 24,
+        "email": "admin@gmail.com",
+        "role": "admin"
+      }
+    },
+    "notes": "Admin info"
+  },
+  {
+    "test": "GET /auth/me no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Not authenticated"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "GET /auth/me bad token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Invalid or expired token"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "GET /employee/dashboard (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "leaveBalance": {
+        "casual": 12,
+        "sick": 10,
+        "earned": 20
+      },
+      "pendingLeaves": [],
+      "approvedLeaves": []
+    },
+    "notes": "Balances + leaves"
+  },
+  {
+    "test": "GET /employee/dashboard as admin (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "Access denied"
+    },
+    "notes": "Expected 403"
+  },
+  {
+    "test": "GET /employee/dashboard no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Not authenticated"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "GET /admin/dashboard (admin)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "stats": {
+        "totalEmployees": 29,
+        "totalAdmins": 1,
+        "pending": 11,
+        "approved": 2,
+        "rejected": 2
+      },
+      "recentLeaves": [
+        {
+          "id": 37,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "status": "rejected",
+          "employeeName": "Employee Two"
+        },
+        {
+          "id": 36,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "status": "approved",
+          "employeeName": "Test Employee Updated"
+        },
+        {
+          "id": 35,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-19",
+          "endDate": "2026-09-20",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Test Employee"
+        },
+        {
+          "id": 34,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Employee Two"
+        },
+        {
+          "id": 33,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Test Employee"
+        },
+        {
+          "id": 32,
+          "leaveType": "Earned Leave",
+          "startDate": "2026-09-17",
+          "endDate": "2026-09-18",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Test Employee"
+        },
+        {
+          "id": 31,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Employee Two"
+        },
+        {
+          "id": 30,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "status": "pending",
+          "employeeName": "Test Employee"
+        }
+      ]
+    },
+    "notes": "Admin summary"
+  },
+  {
+    "test": "GET /admin/dashboard as employee (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "Access denied"
+    },
+    "notes": "Expected 403"
+  },
+  {
+    "test": "GET /admin/dashboard no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Not authenticated"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "Apply leave (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Leave request submitted successfully",
+      "leave": {
+        "id": 39,
+        "leaveType": "Casual Leave",
+        "startDate": "2026-08-28",
+        "endDate": "2026-08-29",
+        "days": 2,
+        "reason": "E2E test leave",
+        "status": "pending",
+        "createdDate": "2026-08-18T22:39:51"
+      }
+    },
+    "notes": "leave_id=39"
+  },
+  {
+    "test": "Apply leave (employee 2)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Leave request submitted successfully",
+      "leave": {
+        "id": 40,
+        "leaveType": "Sick Leave",
+        "startDate": "2026-09-07",
+        "endDate": "2026-09-08",
+        "days": 2,
+        "reason": "Employee 2 sick leave",
+        "status": "pending",
+        "createdDate": "2026-08-18T22:39:53"
+      }
+    },
+    "notes": "leave_id=40"
+  },
+  {
+    "test": "Apply leave invalid type (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> leaveType",
+          "message": "Input should be 'CASUAL', 'SICK' or 'EARNED'"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Apply leave zero days (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> leaveDays",
+          "message": "Input should be greater than 0"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Apply leave empty body (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> leaveType",
+          "message": "Field required"
+        },
+        {
+          "field": "body -> startDate",
+          "message": "Field required"
+        },
+        {
+          "field": "body -> endDate",
+          "message": "Field required"
+        },
+        {
+          "field": "body -> leaveDays",
+          "message": "Field required"
+        },
+        {
+          "field": "body -> reason",
+          "message": "Field required"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Apply leave no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Not authenticated"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "GET /leave/my (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "leaves": [
+        {
+          "id": 39,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:39:51"
+        }
+      ]
+    },
+    "notes": "My leaves"
+  },
+  {
+    "test": "GET /leave/my no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": {
+      "detail": "Not authenticated"
+    },
+    "notes": "Expected 401"
+  },
+  {
+    "test": "POST /leaves (create)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "id": 41,
+      "employee_id": 9806,
+      "leave_type": "EARNED",
+      "start_date": "2026-09-17",
+      "end_date": "2026-09-18",
+      "leave_days": 2,
+      "reason": "CRUD test leave",
+      "status": "PENDING",
+      "created_at": "2026-08-18T22:40:07",
+      "updated_at": "2026-08-18T22:40:07"
+    },
+    "notes": "leave_id=41"
+  },
+  {
+    "test": "GET /leaves (list)",
+    "ok": true,
+    "status_code": 200,
+    "body": [
+      {
+        "id": 41,
+        "employee_id": 9806,
+        "leave_type": "EARNED",
+        "start_date": "2026-09-17",
+        "end_date": "2026-09-18",
+        "leave_days": 2,
+        "reason": "CRUD test leave",
+        "status": "PENDING",
+        "created_at": "2026-08-18T22:40:07",
+        "updated_at": "2026-08-18T22:40:07"
+      },
+      {
+        "id": 39,
+        "employee_id": 9806,
+        "leave_type": "CASUAL",
+        "start_date": "2026-08-28",
+        "end_date": "2026-08-29",
+        "leave_days": 2,
+        "reason": "E2E test leave",
+        "status": "PENDING",
+        "created_at": "2026-08-18T22:39:51",
+        "updated_at": "2026-08-18T22:39:51"
+      }
+    ],
+    "notes": "List leaves"
+  },
+  {
+    "test": "PUT /leaves/41 (update)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "id": 41,
+      "employee_id": 9806,
+      "leave_type": "SICK",
+      "start_date": "2026-09-19",
+      "end_date": "2026-09-20",
+      "leave_days": 2,
+      "reason": "Updated CRUD leave",
+      "status": "PENDING",
+      "created_at": "2026-08-18T22:40:07",
+      "updated_at": "2026-08-18T22:40:11"
+    },
+    "notes": "Updated"
+  },
+  {
+    "test": "GET /leave/all (admin)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "leaves": [
+        {
+          "id": 41,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-19",
+          "endDate": "2026-09-20",
+          "days": 2,
+          "reason": "Updated CRUD leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:40:07",
+          "employee": {
+            "id": 47,
+            "name": "Test Employee",
+            "email": "testemp1787110726@gmail.com"
+          }
+        },
+        {
+          "id": 40,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:39:53",
+          "employee": {
+            "id": 48,
+            "name": "Employee Two",
+            "email": "testemp21787110726@yahoo.com"
+          }
+        },
+        {
+          "id": 39,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:39:51",
+          "employee": {
+            "id": 47,
+            "name": "Test Employee",
+            "email": "testemp1787110726@gmail.com"
+          }
+        },
+        {
+          "id": 37,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "rejected",
+          "createdDate": "2026-08-18T22:36:28",
+          "employee": {
+            "id": 45,
+            "name": "Employee Two",
+            "email": "testemp21787110522@yahoo.com"
+          }
+        },
+        {
+          "id": 36,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "approved",
+          "createdDate": "2026-08-18T22:36:26",
+          "employee": {
+            "id": 44,
+            "name": "Test Employee Updated",
+            "email": "testemp1787110522@gmail.com"
+          }
+        },
+        {
+          "id": 35,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-19",
+          "endDate": "2026-09-20",
+          "days": 2,
+          "reason": "Updated CRUD leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:35:06",
+          "employee": {
+            "id": 41,
+            "name": "Test Employee",
+            "email": "testemp1787110425@gmail.com"
+          }
+        },
+        {
+          "id": 34,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:34:51",
+          "employee": {
+            "id": 42,
+            "name": "Employee Two",
+            "email": "testemp21787110425@yahoo.com"
+          }
+        },
+        {
+          "id": 33,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:34:49",
+          "employee": {
+            "id": 41,
+            "name": "Test Employee",
+            "email": "testemp1787110425@gmail.com"
+          }
+        },
+        {
+          "id": 32,
+          "leaveType": "Earned Leave",
+          "startDate": "2026-09-17",
+          "endDate": "2026-09-18",
+          "days": 2,
+          "reason": "CRUD test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:28:13",
+          "employee": {
+            "id": 37,
+            "name": "Test Employee",
+            "email": "testemp1787110011@gmail.com"
+          }
+        },
+        {
+          "id": 31,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:28:07",
+          "employee": {
+            "id": 39,
+            "name": "Employee Two",
+            "email": "testemp21787110011@yahoo.com"
+          }
+        },
+        {
+          "id": 30,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:27:57",
+          "employee": {
+            "id": 37,
+            "name": "Test Employee",
+            "email": "testemp1787110011@gmail.com"
+          }
+        },
+        {
+          "id": 29,
+          "leaveType": "Earned Leave",
+          "startDate": "2026-09-17",
+          "endDate": "2026-09-18",
+          "days": 2,
+          "reason": "CRUD test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:25:50",
+          "employee": {
+            "id": 32,
+            "name": "Test Employee",
+            "email": "testemp1787109868@gmail.com"
+          }
+        },
+        {
+          "id": 28,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:25:44",
+          "employee": {
+            "id": 34,
+            "name": "Employee Two",
+            "email": "testemp21787109868@yahoo.com"
+          }
+        },
+        {
+          "id": 27,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-28",
+          "endDate": "2026-08-29",
+          "days": 2,
+          "reason": "E2E test leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:25:34",
+          "employee": {
+            "id": 32,
+            "name": "Test Employee",
+            "email": "testemp1787109868@gmail.com"
+          }
+        },
+        {
+          "id": 25,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-09-07",
+          "endDate": "2026-09-08",
+          "days": 2,
+          "reason": "Employee 2 sick leave",
+          "status": "pending",
+          "createdDate": "2026-08-18T22:22:52",
+          "employee": {
+            "id": 30,
+            "name": "Employee Two",
+            "email": "testemp21787109696@yahoo.com"
+          }
+        },
+        {
+          "id": 23,
+          "leaveType": "Earned Leave",
+          "startDate": "2026-11-20",
+          "endDate": "2026-11-22",
+          "days": 3,
+          "reason": "Personal",
+          "status": "rejected",
+          "createdDate": "2026-08-18T17:41:59",
+          "employee": {
+            "id": 25,
+            "name": "Employee One",
+            "email": "employee@gmail.com"
+          }
+        },
+        {
+          "id": 22,
+          "leaveType": "Sick Leave",
+          "startDate": "2026-11-15",
+          "endDate": "2026-11-16",
+          "days": 2,
+          "reason": "Checkup",
+          "status": "approved",
+          "createdDate": "2026-08-18T17:41:58",
+          "employee": {
+            "id": 25,
+            "name": "Employee One",
+            "email": "employee@gmail.com"
+          }
+        },
+        {
+          "id": 16,
+          "leaveType": "Casual Leave",
+          "startDate": "2026-08-20",
+          "endDate": "2026-08-20",
+          "days": 1,
+          "reason": "personal work",
+          "status": "pending",
+          "createdDate": "2026-08-15T01:00:34",
+          "employee": {
+            "id": 20,
+            "name": "prasad",
+            "email": "prasad@gmail.com"
+          }
+        }
+      ]
+    },
+    "notes": "All leaves"
+  },
+  {
+    "test": "GET /leave/all?status=pending",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "Filtered"
+  },
+  {
+    "test": "GET /leave/all?status=approved",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "Filtered"
+  },
+  {
+    "test": "GET /leave/all as employee (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "Access denied"
+    },
+    "notes": "Expected 403"
+  },
+  {
+    "test": "Admin approve leave 39",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Leave request approved",
+      "leave": {
+        "id": 39,
+        "leaveType": "Casual Leave",
+        "startDate": "2026-08-28",
+        "endDate": "2026-08-29",
+        "days": 2,
+        "reason": "E2E test leave",
+        "status": "approved",
+        "createdDate": "2026-08-18T22:39:51"
+      }
+    },
+    "notes": "Approved"
+  },
+  {
+    "test": "Employee approve (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "Access denied"
+    },
+    "notes": "Expected 403"
+  },
+  {
+    "test": "Approve non-existent (should fail)",
+    "ok": true,
+    "status_code": 400,
+    "body": {
+      "detail": "Leave request not found"
+    },
+    "notes": "Expected 404"
+  },
+  {
+    "test": "Admin reject leave 40",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Leave request rejected",
+      "leave": {
+        "id": 40,
+        "leaveType": "Sick Leave",
+        "startDate": "2026-09-07",
+        "endDate": "2026-09-08",
+        "days": 2,
+        "reason": "Employee 2 sick leave",
+        "status": "rejected",
+        "createdDate": "2026-08-18T22:39:53"
+      }
+    },
+    "notes": "Rejected"
+  },
+  {
+    "test": "Employee sees approved leave",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "status=approved"
+  },
+  {
+    "test": "Employee 2 sees rejected leave",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "status=rejected"
+  },
+  {
+    "test": "DELETE /leaves/41 (own pending)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Leave request deleted successfully"
+    },
+    "notes": "Deleted"
+  },
+  {
+    "test": "Delete approved leave (should fail)",
+    "ok": true,
+    "status_code": 400,
+    "body": {
+      "detail": "Only pending leave requests can be deleted"
+    },
+    "notes": "Cannot delete approved"
+  },
+  {
+    "test": "Delete other employee's leave (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "You cannot delete another employee's leave request"
+    },
+    "notes": "Cannot delete other's"
+  },
+  {
+    "test": "Delete non-existent (should fail)",
+    "ok": true,
+    "status_code": 404,
+    "body": {
+      "detail": "Leave request not found"
+    },
+    "notes": "Expected 404"
+  },
+  {
+    "test": "GET /users/profile (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "id": 47,
+      "employee_id": 9806,
+      "name": "Test Employee",
+      "email": "testemp1787110726@gmail.com",
+      "role": "employee",
+      "createdDate": "2026-08-18T22:38:55",
+      "leaveBalance": {
+        "Casual Leave": {
+          "total": 12,
+          "used": 2,
+          "remaining": 10
+        },
+        "Earned Leave": {
+          "total": 20,
+          "used": 0,
+          "remaining": 20
+        },
+        "Sick Leave": {
+          "total": 10,
+          "used": 0,
+          "remaining": 10
+        }
+      }
+    },
+    "notes": "Profile + balances"
+  },
+  {
+    "test": "GET /users/profile no token (should fail)",
+    "ok": true,
+    "status_code": 401,
+    "body": null,
+    "notes": "Expected 401"
+  },
+  {
+    "test": "GET /users (admin)",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "Found 30 users"
+  },
+  {
+    "test": "GET /users as employee (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Expected 403"
+  },
+  {
+    "test": "GET /users/47 (admin)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "id": 47,
+      "employee_id": 9806,
+      "name": "Test Employee",
+      "email": "testemp1787110726@gmail.com",
+      "role": "employee",
+      "createdDate": "2026-08-18T22:38:55",
+      "leaveBalance": {
+        "Casual Leave": {
+          "total": 12,
+          "used": 2,
+          "remaining": 10
+        },
+        "Earned Leave": {
+          "total": 20,
+          "used": 0,
+          "remaining": 20
+        },
+        "Sick Leave": {
+          "total": 10,
+          "used": 0,
+          "remaining": 10
+        }
+      }
+    },
+    "notes": "User detail"
+  },
+  {
+    "test": "GET /users/99999 (should fail)",
+    "ok": true,
+    "status_code": 404,
+    "body": null,
+    "notes": "Expected 404"
+  },
+  {
+    "test": "GET /users/{id} as employee (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Expected 403"
+  },
+  {
+    "test": "GET /profile (employee)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "employee_id": 9806,
+      "role": "employee",
+      "name": "Test Employee",
+      "email": "testemp1787110726@gmail.com",
+      "address": null,
+      "phone_number": null
+    },
+    "notes": "Profile details"
+  },
+  {
+    "test": "GET /profile (admin - employee only)",
+    "ok": true,
+    "status_code": 403,
+    "body": {
+      "detail": "Access denied"
+    },
+    "notes": "Expected 403 - employee only endpoint"
+  },
+  {
+    "test": "PUT /profile (update)",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "employee_id": 9806,
+      "role": "employee",
+      "name": "Test Employee Updated",
+      "email": "testemp1787110726@gmail.com",
+      "address": "123 Test St",
+      "phone_number": "+919876543210"
+    },
+    "notes": "Updated"
+  },
+  {
+    "test": "Update profile short name (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> name",
+          "message": "String should have at least 2 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Update profile invalid email (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> email",
+          "message": "Value error, Only @gmail.com, @company.com, or @yahoo.com email addresses are allowed"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Update profile missing fields (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> email",
+          "message": "Field required"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Change password",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "message": "Password updated successfully"
+    },
+    "notes": "Password changed"
+  },
+  {
+    "test": "Login with new password",
+    "ok": true,
+    "status_code": 200,
+    "body": {
+      "token_type": "bearer",
+      "user": {
+        "id": 47,
+        "name": "Test Employee Updated",
+        "email": "testemp1787110726@gmail.com",
+        "role": "employee"
+      }
+    },
+    "notes": "Verified"
+  },
+  {
+    "test": "Wrong current password (should fail)",
+    "ok": true,
+    "status_code": 400,
+    "body": {
+      "detail": "Current password is incorrect"
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Too short new password (should fail)",
+    "ok": true,
+    "status_code": 422,
+    "body": {
+      "detail": "Validation error",
+      "errors": [
+        {
+          "field": "body -> new_password",
+          "message": "String should have at least 8 characters"
+        }
+      ]
+    },
+    "notes": "Expected 4xx"
+  },
+  {
+    "test": "Leave balance check",
+    "ok": true,
+    "status_code": 200,
+    "body": null,
+    "notes": "casual=10, sick=10, earned=20"
+  },
+  {
+    "test": "GET /api/nonexistent (should 404)",
+    "ok": true,
+    "status_code": 404,
+    "body": null,
+    "notes": "Expected 404"
+  },
+  {
+    "test": "Admin -> /employee/dashboard (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Admin -> /leave/my (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Admin -> /leaves (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Admin -> /profile (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Employee -> /leave/all (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Employee -> /admin/dashboard (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  },
+  {
+    "test": "Employee -> /users (should fail)",
+    "ok": true,
+    "status_code": 403,
+    "body": null,
+    "notes": "Role isolation"
+  }
+]

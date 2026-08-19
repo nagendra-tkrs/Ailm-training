@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Backend E2E Test Report</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+h1 { color: #333; }
+.summary { background: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.summary span { margin-right: 20px; font-size: 18px; }
+.pass { color: #2e7d32; font-weight: bold; }
+.fail { color: #c62828; font-weight: bold; }
+.total { color: #1565c0; font-weight: bold; }
+table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+th { background: #1565c0; color: white; padding: 12px 15px; text-align: left; }
+td { padding: 10px 15px; border-bottom: 1px solid #eee; }
+tr:hover { background: #f0f7ff; }
+.pass-row { color: #2e7d32; }
+.fail-row { color: #c62828; font-weight: bold; }
+</style></head><body>
+<h1>Backend E2E Test Report</h1>
+<div class="summary">
+  <span class="total">Total: 81</span>
+  <span class="pass">Passed: 81</span>
+  <span class="fail">Failed: 0</span>
+  <span>Generated: 2026-08-18</span>
+</div>
+<table><tr><th>#</th><th>Test Name</th><th>Status</th><th>HTTP</th><th>Notes</th></tr>
+<tr class="pass-row"><td>1</td><td>GET /</td><td>PASS</td><td>200</td><td>OK</td></tr>
+<tr class="pass-row"><td>2</td><td>GET /health</td><td>PASS</td><td>200</td><td>OK</td></tr>
+<tr class="pass-row"><td>3</td><td>GET /db-test</td><td>PASS</td><td>200</td><td>OK</td></tr>
+<tr class="pass-row"><td>4</td><td>Register employee</td><td>PASS</td><td>200</td><td>user_id=47</td></tr>
+<tr class="pass-row"><td>5</td><td>Login seed admin</td><td>PASS</td><td>200</td><td>user_id=24</td></tr>
+<tr class="pass-row"><td>6</td><td>Register employee 2 (yahoo)</td><td>PASS</td><td>200</td><td>user_id=48</td></tr>
+<tr class="pass-row"><td>7</td><td>Register employee 3 (company)</td><td>PASS</td><td>200</td><td>user_id=49</td></tr>
+<tr class="pass-row"><td>8</td><td>Register duplicate email (should fail)</td><td>PASS</td><td>409</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>9</td><td>Register invalid domain (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>10</td><td>Register short password (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>11</td><td>Register short name (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>12</td><td>Register empty name (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>13</td><td>Register empty body (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>14</td><td>Employee login</td><td>PASS</td><td>200</td><td>token obtained</td></tr>
+<tr class="pass-row"><td>15</td><td>Employee 2 login (yahoo)</td><td>PASS</td><td>200</td><td>token obtained</td></tr>
+<tr class="pass-row"><td>16</td><td>Employee 3 login (company)</td><td>PASS</td><td>200</td><td>token obtained</td></tr>
+<tr class="pass-row"><td>17</td><td>Login wrong password (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>18</td><td>Login non-existent user (should fail)</td><td>PASS</td><td>401</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>19</td><td>Login invalid domain (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>20</td><td>Login empty body (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>21</td><td>GET /auth/me (employee)</td><td>PASS</td><td>200</td><td>User info</td></tr>
+<tr class="pass-row"><td>22</td><td>GET /auth/me (admin)</td><td>PASS</td><td>200</td><td>Admin info</td></tr>
+<tr class="pass-row"><td>23</td><td>GET /auth/me no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>24</td><td>GET /auth/me bad token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>25</td><td>GET /employee/dashboard (employee)</td><td>PASS</td><td>200</td><td>Balances + leaves</td></tr>
+<tr class="pass-row"><td>26</td><td>GET /employee/dashboard as admin (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>27</td><td>GET /employee/dashboard no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>28</td><td>GET /admin/dashboard (admin)</td><td>PASS</td><td>200</td><td>Admin summary</td></tr>
+<tr class="pass-row"><td>29</td><td>GET /admin/dashboard as employee (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>30</td><td>GET /admin/dashboard no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>31</td><td>Apply leave (employee)</td><td>PASS</td><td>200</td><td>leave_id=39</td></tr>
+<tr class="pass-row"><td>32</td><td>Apply leave (employee 2)</td><td>PASS</td><td>200</td><td>leave_id=40</td></tr>
+<tr class="pass-row"><td>33</td><td>Apply leave invalid type (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>34</td><td>Apply leave zero days (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>35</td><td>Apply leave empty body (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>36</td><td>Apply leave no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>37</td><td>GET /leave/my (employee)</td><td>PASS</td><td>200</td><td>My leaves</td></tr>
+<tr class="pass-row"><td>38</td><td>GET /leave/my no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>39</td><td>POST /leaves (create)</td><td>PASS</td><td>200</td><td>leave_id=41</td></tr>
+<tr class="pass-row"><td>40</td><td>GET /leaves (list)</td><td>PASS</td><td>200</td><td>List leaves</td></tr>
+<tr class="pass-row"><td>41</td><td>PUT /leaves/41 (update)</td><td>PASS</td><td>200</td><td>Updated</td></tr>
+<tr class="pass-row"><td>42</td><td>GET /leave/all (admin)</td><td>PASS</td><td>200</td><td>All leaves</td></tr>
+<tr class="pass-row"><td>43</td><td>GET /leave/all?status=pending</td><td>PASS</td><td>200</td><td>Filtered</td></tr>
+<tr class="pass-row"><td>44</td><td>GET /leave/all?status=approved</td><td>PASS</td><td>200</td><td>Filtered</td></tr>
+<tr class="pass-row"><td>45</td><td>GET /leave/all as employee (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>46</td><td>Admin approve leave 39</td><td>PASS</td><td>200</td><td>Approved</td></tr>
+<tr class="pass-row"><td>47</td><td>Employee approve (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>48</td><td>Approve non-existent (should fail)</td><td>PASS</td><td>400</td><td>Expected 404</td></tr>
+<tr class="pass-row"><td>49</td><td>Admin reject leave 40</td><td>PASS</td><td>200</td><td>Rejected</td></tr>
+<tr class="pass-row"><td>50</td><td>Employee sees approved leave</td><td>PASS</td><td>200</td><td>status=approved</td></tr>
+<tr class="pass-row"><td>51</td><td>Employee 2 sees rejected leave</td><td>PASS</td><td>200</td><td>status=rejected</td></tr>
+<tr class="pass-row"><td>52</td><td>DELETE /leaves/41 (own pending)</td><td>PASS</td><td>200</td><td>Deleted</td></tr>
+<tr class="pass-row"><td>53</td><td>Delete approved leave (should fail)</td><td>PASS</td><td>400</td><td>Cannot delete approved</td></tr>
+<tr class="pass-row"><td>54</td><td>Delete other employee's leave (should fail)</td><td>PASS</td><td>403</td><td>Cannot delete other's</td></tr>
+<tr class="pass-row"><td>55</td><td>Delete non-existent (should fail)</td><td>PASS</td><td>404</td><td>Expected 404</td></tr>
+<tr class="pass-row"><td>56</td><td>GET /users/profile (employee)</td><td>PASS</td><td>200</td><td>Profile + balances</td></tr>
+<tr class="pass-row"><td>57</td><td>GET /users/profile no token (should fail)</td><td>PASS</td><td>401</td><td>Expected 401</td></tr>
+<tr class="pass-row"><td>58</td><td>GET /users (admin)</td><td>PASS</td><td>200</td><td>Found 30 users</td></tr>
+<tr class="pass-row"><td>59</td><td>GET /users as employee (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>60</td><td>GET /users/47 (admin)</td><td>PASS</td><td>200</td><td>User detail</td></tr>
+<tr class="pass-row"><td>61</td><td>GET /users/99999 (should fail)</td><td>PASS</td><td>404</td><td>Expected 404</td></tr>
+<tr class="pass-row"><td>62</td><td>GET /users/{id} as employee (should fail)</td><td>PASS</td><td>403</td><td>Expected 403</td></tr>
+<tr class="pass-row"><td>63</td><td>GET /profile (employee)</td><td>PASS</td><td>200</td><td>Profile details</td></tr>
+<tr class="pass-row"><td>64</td><td>GET /profile (admin - employee only)</td><td>PASS</td><td>403</td><td>Expected 403 - employee only endpoint</td></tr>
+<tr class="pass-row"><td>65</td><td>PUT /profile (update)</td><td>PASS</td><td>200</td><td>Updated</td></tr>
+<tr class="pass-row"><td>66</td><td>Update profile short name (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>67</td><td>Update profile invalid email (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>68</td><td>Update profile missing fields (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>69</td><td>Change password</td><td>PASS</td><td>200</td><td>Password changed</td></tr>
+<tr class="pass-row"><td>70</td><td>Login with new password</td><td>PASS</td><td>200</td><td>Verified</td></tr>
+<tr class="pass-row"><td>71</td><td>Wrong current password (should fail)</td><td>PASS</td><td>400</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>72</td><td>Too short new password (should fail)</td><td>PASS</td><td>422</td><td>Expected 4xx</td></tr>
+<tr class="pass-row"><td>73</td><td>Leave balance check</td><td>PASS</td><td>200</td><td>casual=10, sick=10, earned=20</td></tr>
+<tr class="pass-row"><td>74</td><td>GET /api/nonexistent (should 404)</td><td>PASS</td><td>404</td><td>Expected 404</td></tr>
+<tr class="pass-row"><td>75</td><td>Admin -> /employee/dashboard (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>76</td><td>Admin -> /leave/my (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>77</td><td>Admin -> /leaves (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>78</td><td>Admin -> /profile (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>79</td><td>Employee -> /leave/all (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>80</td><td>Employee -> /admin/dashboard (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+<tr class="pass-row"><td>81</td><td>Employee -> /users (should fail)</td><td>PASS</td><td>403</td><td>Role isolation</td></tr>
+</table></body></html>

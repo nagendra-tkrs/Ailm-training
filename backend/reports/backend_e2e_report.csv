@@ -1,0 +1,82 @@
+Test ID,Test Name,Passed,HTTP Status,Short Details,Notes
+1,GET /,PASS,200,{'message': 'Employee Leave Management Backend is running'},OK
+2,GET /health,PASS,200,{'status': 'ok'},OK
+3,GET /db-test,PASS,200,{'message': 'MySQL database connected successfully'},OK
+4,Register employee,PASS,200,"{'message': 'User registered successfully', 'user': ""{'id': 47, 'employee_id': 9806, 'name': 'Test Empl""}",user_id=47
+5,Login seed admin,PASS,200,"{'token_type': 'bearer', 'user': ""{'id': 24, 'name': 'System Admin', 'email': 'admin""}",user_id=24
+6,Register employee 2 (yahoo),PASS,200,"{'message': 'User registered successfully', 'user': ""{'id': 48, 'employee_id': 8752, 'name': 'Employee ""}",user_id=48
+7,Register employee 3 (company),PASS,200,"{'message': 'User registered successfully', 'user': ""{'id': 49, 'employee_id': 3996, 'name': 'Employee ""}",user_id=49
+8,Register duplicate email (should fail),PASS,409,{'detail': 'Email already registered'},Expected 4xx
+9,Register invalid domain (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> email', 'message': 'Value erro""}",Expected 4xx
+10,Register short password (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> password', 'message': 'String ""}",Expected 4xx
+11,Register short name (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> name', 'message': 'String shou""}",Expected 4xx
+12,Register empty name (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> name', 'message': 'String shou""}",Expected 4xx
+13,Register empty body (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body', 'message': 'Field required'}]""}",Expected 4xx
+14,Employee login,PASS,200,"{'token_type': 'bearer', 'user': ""{'id': 47, 'name': 'Test Employee', 'email': 'test""}",token obtained
+15,Employee 2 login (yahoo),PASS,200,"{'token_type': 'bearer', 'user': ""{'id': 48, 'name': 'Employee Two', 'email': 'teste""}",token obtained
+16,Employee 3 login (company),PASS,200,"{'token_type': 'bearer', 'user': ""{'id': 49, 'name': 'Employee Three', 'email': 'tes""}",token obtained
+17,Login wrong password (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> password', 'message': 'String ""}",Expected 4xx
+18,Login non-existent user (should fail),PASS,401,{'detail': 'Invalid email or password'},Expected 4xx
+19,Login invalid domain (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> email', 'message': 'Value erro""}",Expected 4xx
+20,Login empty body (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> email', 'message': 'Field requ""}",Expected 4xx
+21,GET /auth/me (employee),PASS,200,"{'message': 'Authentication successful', 'user': ""{'user_id': 47, 'email': 'testemp1787110726@gmail.""}",User info
+22,GET /auth/me (admin),PASS,200,"{'message': 'Authentication successful', 'user': ""{'user_id': 24, 'email': 'admin@gmail.com', 'role'""}",Admin info
+23,GET /auth/me no token (should fail),PASS,401,{'detail': 'Not authenticated'},Expected 401
+24,GET /auth/me bad token (should fail),PASS,401,{'detail': 'Invalid or expired token'},Expected 401
+25,GET /employee/dashboard (employee),PASS,200,"{'leaveBalance': ""{'casual': 12, 'sick': 10, 'earned': 20}"", 'pendingLeaves': '[]', 'approvedLeaves': '[]'}",Balances + leaves
+26,GET /employee/dashboard as admin (should fail),PASS,403,{'detail': 'Access denied'},Expected 403
+27,GET /employee/dashboard no token (should fail),PASS,401,{'detail': 'Not authenticated'},Expected 401
+28,GET /admin/dashboard (admin),PASS,200,"{'stats': ""{'totalEmployees': 29, 'totalAdmins': 1, 'pending'"", 'recentLeaves': ""[{'id': 37, 'leaveType': 'Sick Leave', 'startDate'""}",Admin summary
+29,GET /admin/dashboard as employee (should fail),PASS,403,{'detail': 'Access denied'},Expected 403
+30,GET /admin/dashboard no token (should fail),PASS,401,{'detail': 'Not authenticated'},Expected 401
+31,Apply leave (employee),PASS,200,"{'message': 'Leave request submitted successfully', 'leave': ""{'id': 39, 'leaveType': 'Casual Leave', 'startDate""}",leave_id=39
+32,Apply leave (employee 2),PASS,200,"{'message': 'Leave request submitted successfully', 'leave': ""{'id': 40, 'leaveType': 'Sick Leave', 'startDate':""}",leave_id=40
+33,Apply leave invalid type (should fail),PASS,422,"{'detail': 'Validation error', 'errors': '[{\'field\': \'body -> leaveType\', \'message\': ""Input '}",Expected 4xx
+34,Apply leave zero days (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> leaveDays', 'message': 'Input ""}",Expected 4xx
+35,Apply leave empty body (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> leaveType', 'message': 'Field ""}",Expected 4xx
+36,Apply leave no token (should fail),PASS,401,{'detail': 'Not authenticated'},Expected 401
+37,GET /leave/my (employee),PASS,200,"{'leaves': ""[{'id': 39, 'leaveType': 'Casual Leave', 'startDat""}",My leaves
+38,GET /leave/my no token (should fail),PASS,401,{'detail': 'Not authenticated'},Expected 401
+39,POST /leaves (create),PASS,200,"{'id': '41', 'employee_id': '9806', 'leave_type': 'EARNED'}",leave_id=41
+40,GET /leaves (list),PASS,200,"[{'id': 41, 'employee_id': 9806, 'leave_type': 'EARNED', 'start_date': '2026-09-17', 'end_date': '2026-09-18', 'leave_days': 2, 'reason': 'CRUD test l",List leaves
+41,PUT /leaves/41 (update),PASS,200,"{'id': '41', 'employee_id': '9806', 'leave_type': 'SICK'}",Updated
+42,GET /leave/all (admin),PASS,200,"{'leaves': ""[{'id': 41, 'leaveType': 'Sick Leave', 'startDate'""}",All leaves
+43,GET /leave/all?status=pending,PASS,200,,Filtered
+44,GET /leave/all?status=approved,PASS,200,,Filtered
+45,GET /leave/all as employee (should fail),PASS,403,{'detail': 'Access denied'},Expected 403
+46,Admin approve leave 39,PASS,200,"{'message': 'Leave request approved', 'leave': ""{'id': 39, 'leaveType': 'Casual Leave', 'startDate""}",Approved
+47,Employee approve (should fail),PASS,403,{'detail': 'Access denied'},Expected 403
+48,Approve non-existent (should fail),PASS,400,{'detail': 'Leave request not found'},Expected 404
+49,Admin reject leave 40,PASS,200,"{'message': 'Leave request rejected', 'leave': ""{'id': 40, 'leaveType': 'Sick Leave', 'startDate':""}",Rejected
+50,Employee sees approved leave,PASS,200,,status=approved
+51,Employee 2 sees rejected leave,PASS,200,,status=rejected
+52,DELETE /leaves/41 (own pending),PASS,200,{'message': 'Leave request deleted successfully'},Deleted
+53,Delete approved leave (should fail),PASS,400,{'detail': 'Only pending leave requests can be deleted'},Cannot delete approved
+54,Delete other employee's leave (should fail),PASS,403,"{'detail': ""You cannot delete another employee's leave request""}",Cannot delete other's
+55,Delete non-existent (should fail),PASS,404,{'detail': 'Leave request not found'},Expected 404
+56,GET /users/profile (employee),PASS,200,"{'id': '47', 'employee_id': '9806', 'name': 'Test Employee'}",Profile + balances
+57,GET /users/profile no token (should fail),PASS,401,,Expected 401
+58,GET /users (admin),PASS,200,,Found 30 users
+59,GET /users as employee (should fail),PASS,403,,Expected 403
+60,GET /users/47 (admin),PASS,200,"{'id': '47', 'employee_id': '9806', 'name': 'Test Employee'}",User detail
+61,GET /users/99999 (should fail),PASS,404,,Expected 404
+62,GET /users/{id} as employee (should fail),PASS,403,,Expected 403
+63,GET /profile (employee),PASS,200,"{'employee_id': '9806', 'role': 'employee', 'name': 'Test Employee'}",Profile details
+64,GET /profile (admin - employee only),PASS,403,{'detail': 'Access denied'},Expected 403 - employee only endpoint
+65,PUT /profile (update),PASS,200,"{'employee_id': '9806', 'role': 'employee', 'name': 'Test Employee Updated'}",Updated
+66,Update profile short name (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> name', 'message': 'String shou""}",Expected 4xx
+67,Update profile invalid email (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> email', 'message': 'Value erro""}",Expected 4xx
+68,Update profile missing fields (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> email', 'message': 'Field requ""}",Expected 4xx
+69,Change password,PASS,200,{'message': 'Password updated successfully'},Password changed
+70,Login with new password,PASS,200,"{'token_type': 'bearer', 'user': ""{'id': 47, 'name': 'Test Employee Updated', 'email""}",Verified
+71,Wrong current password (should fail),PASS,400,{'detail': 'Current password is incorrect'},Expected 4xx
+72,Too short new password (should fail),PASS,422,"{'detail': 'Validation error', 'errors': ""[{'field': 'body -> new_password', 'message': 'Str""}",Expected 4xx
+73,Leave balance check,PASS,200,,"casual=10, sick=10, earned=20"
+74,GET /api/nonexistent (should 404),PASS,404,,Expected 404
+75,Admin -> /employee/dashboard (should fail),PASS,403,,Role isolation
+76,Admin -> /leave/my (should fail),PASS,403,,Role isolation
+77,Admin -> /leaves (should fail),PASS,403,,Role isolation
+78,Admin -> /profile (should fail),PASS,403,,Role isolation
+79,Employee -> /leave/all (should fail),PASS,403,,Role isolation
+80,Employee -> /admin/dashboard (should fail),PASS,403,,Role isolation
+81,Employee -> /users (should fail),PASS,403,,Role isolation
